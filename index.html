@@ -694,7 +694,6 @@
     const container = document.getElementById('news-container');
     if (!container) return;
 
-    // Kasutame RSS-i läbi rss2json tasuta avaliku API
     const rssUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.err.ee/rss');
 
     fetchWithTimeout(rssUrl, 8000)
@@ -703,7 +702,6 @@
         if (!data.items || !data.items.length) throw new Error('Uudiseid ei leitud');
         
         let html = '';
-        // Võtame 5 viimast olulist uudist
         const items = data.items.slice(0, 5);
         items.forEach(item => {
           const pubDate = new Date(item.pubDate);
@@ -1025,7 +1023,7 @@
     document.getElementById('table-container').innerHTML = html;
   }
 
-  /* Automaatne uuendamine iga 30 minuti tagant ka uudistele */
+  /* Uudiste uuendamine iga 30 minuti tagant */
   setInterval(() => {
     if (document.visibilityState === 'visible') loadErrNews();
   }, CONFIG.NEWS_REFRESH_INTERVAL_MS);
