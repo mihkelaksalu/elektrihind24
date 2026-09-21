@@ -1,0 +1,21 @@
+{
+  "name": "elektrihind24",
+  "version": "1.0.0",
+  "description": "Elektrihind24.ee - Nutikas elektrihinna jälgija",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "preview": "npx serve ."
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  },
+  "keywords": [
+    "electricity",
+    "prices",
+    "estonia",
+    "nordpool"
+  ],
+  "author": "",
+  "license": "MIT"
+}
