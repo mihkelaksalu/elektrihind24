@@ -244,12 +244,22 @@
       border-radius: 8px;
     }
 
-    .updated { font-size: 0.75rem; color: var(--text-muted); text-align: right; }
-
-    /* Chart Container */
+    /* Chart & News Grid */
+    .side-stack { display: flex; flex-direction: column; gap: 24px; }
     .chart-card { display: flex; flex-direction: column; gap: 16px; }
     .chart-header { font-size: 1rem; font-weight: 600; }
-    .chart-wrapper { position: relative; height: 260px; width: 100%; }
+    .chart-wrapper { position: relative; height: 220px; width: 100%; }
+
+    /* ERR News Widget */
+    .news-card { display: flex; flex-direction: column; gap: 14px; }
+    .news-header { display: flex; justify-content: space-between; align-items: center; font-size: 1rem; font-weight: 600; }
+    .news-badge { font-size: 0.7rem; color: #f7768e; background: rgba(247,118,142,0.1); padding: 3px 8px; border-radius: 12px; font-weight: 600; }
+    .news-list { display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
+    .news-item { display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); transition: var(--transition); }
+    .news-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .news-item:hover .news-title { color: var(--accent); }
+    .news-title { font-size: 0.85rem; font-weight: 500; color: var(--text); line-height: 1.4; }
+    .news-time { font-size: 0.75rem; color: var(--text-muted); }
 
     /* Calculator */
     .calc-card { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
@@ -300,9 +310,7 @@
       padding: 12px 16px;
       border-bottom: 1px solid rgba(255,255,255,0.02);
     }
-    .eh-table tr.current {
-      background: var(--accent-glow);
-    }
+    .eh-table tr.current { background: var(--accent-glow); }
     .price-pill {
       display: inline-block;
       padding: 4px 8px;
@@ -475,12 +483,23 @@
         </div>
       </div>
 
-      <!-- Right Column: Chart -->
-      <div id="right-col">
+      <!-- Right Column: Chart & News Widget -->
+      <div id="right-col" class="side-stack">
         <div class="card chart-card">
           <div class="chart-header">Päeva hinnagraafik</div>
           <div class="chart-wrapper">
             <canvas id="priceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- ERR News Widget -->
+        <div class="card news-card">
+          <div class="news-header">
+            <span>ERR Olulised Uudised</span>
+            <span class="news-badge">LIVE</span>
+          </div>
+          <div id="news-container" class="news-list">
+            <div style="font-size:0.85rem; color:var(--text-muted);">Laadin uudiseid...</div>
           </div>
         </div>
       </div>
@@ -509,7 +528,7 @@
 
     <!-- Footer -->
     <footer>
-      <div>Elektrihind24.ee &copy; 2026 · Reaalajas elektri börsihind</div>
+      <div>Elektrihind24.ee &copy; 2026 · Reaalajas elektri börsihind ja uudised</div>
       <div class="footer-links">
         <a href="#" onclick="openModal('tips'); return false;">Säästunipid</a>
         <a href="#" onclick="openModal('privacy'); return false;">Privaatsuspoliitika</a>
@@ -561,6 +580,7 @@
     VAT: 1.24,
     FETCH_TIMEOUT_MS: 10000,
     REFRESH_INTERVAL_MS: 5 * 60 * 1000,
+    NEWS_REFRESH_INTERVAL_MS: 30 * 60 * 1000, // 30 minutit
     CACHE_TTL_MS: 4 * 60 * 1000,
     WEATHER_API: "https://api.open-meteo.com/v1/forecast"
   };
@@ -667,6 +687,38 @@
     return fetch(url, { signal: ctrl.signal })
       .then(r => { clearTimeout(timer); return r; })
       .catch(e => { clearTimeout(timer); throw e; });
+  }
+
+  /* ========== ERR NEWS WIDGET ========== */
+  function loadErrNews() {
+    const container = document.getElementById('news-container');
+    if (!container) return;
+
+    // Kasutame RSS-i läbi rss2json tasuta avaliku API
+    const rssUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.err.ee/rss');
+
+    fetchWithTimeout(rssUrl, 8000)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.items || !data.items.length) throw new Error('Uudiseid ei leitud');
+        
+        let html = '';
+        // Võtame 5 viimast olulist uudist
+        const items = data.items.slice(0, 5);
+        items.forEach(item => {
+          const pubDate = new Date(item.pubDate);
+          const timeStr = pubDate.toLocaleTimeString('et-EE', { hour: '2-digit', minute: '2-digit' });
+          html += `
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-item">
+              <div class="news-title">${item.title}</div>
+              <div class="news-time">${timeStr} · ERR</div>
+            </a>`;
+        });
+        container.innerHTML = html;
+      })
+      .catch(() => {
+        container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted);">Uudiste laadimine ebaõnnestus.</div>`;
+      });
   }
 
   /* ========== WEATHER ========== */
@@ -790,7 +842,6 @@
         document.getElementById('table-section').style.display = 'block';
       })
       .catch(() => {
-        // Fallback to Elering
         const now = new Date();
         const start = new Date(now); start.setHours(0,0,0,0);
         const end = new Date(now); end.setDate(end.getDate() + 1);
@@ -974,8 +1025,15 @@
     document.getElementById('table-container').innerHTML = html;
   }
 
+  /* Automaatne uuendamine iga 30 minuti tagant ka uudistele */
+  setInterval(() => {
+    if (document.visibilityState === 'visible') loadErrNews();
+  }, CONFIG.NEWS_REFRESH_INTERVAL_MS);
+
+  // Käivitused
   loadData();
   initWeather();
+  loadErrNews();
   </script>
 </body>
 </html>
