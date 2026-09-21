@@ -571,9 +571,8 @@
   const CONFIG = {
     SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwOcEVNcbo6h9_yzKMfCVvonZBmgSZdOauCQawGnDhLtyad6NIMoIe-EMIuRjK2hdbd/exec",
     ELERING_API: "https://dashboard.elering.ee/api/nps/price",
-    VAT: 1.24,
+    VAT: 1.24, // 24% käibemaks
     FETCH_TIMEOUT_MS: 10000,
-    REFRESH_INTERVAL_MS: 5 * 60 * 1000,
     NEWS_REFRESH_INTERVAL_MS: 30 * 60 * 1000,
     CACHE_TTL_MS: 4 * 60 * 1000,
     WEATHER_API: "https://api.open-meteo.com/v1/forecast"
@@ -696,8 +695,7 @@
         if (!data.items || !data.items.length) throw new Error('Uudiseid ei leitud');
         
         let html = '';
-        const items = data.items.slice(0, 5);
-        items.forEach(item => {
+        data.items.slice(0, 5).forEach(item => {
           const pubDate = new Date(item.pubDate);
           const timeStr = pubDate.toLocaleTimeString('et-EE', { hour: '2-digit', minute: '2-digit' });
           html += `
@@ -760,9 +758,7 @@
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      pos => {
-        loadWeather(pos.coords.latitude, pos.coords.longitude, 'Sinu asukoht');
-      },
+      pos => loadWeather(pos.coords.latitude, pos.coords.longitude, 'Sinu asukoht'),
       () => loadWeather(59.437, 24.754, 'Tallinn'),
       { timeout: 5000 }
     );
@@ -816,8 +812,6 @@
     if (cached && cached.length) {
       state.allPrices = cached;
       render();
-      document.getElementById('right-col').style.display = 'block';
-      document.getElementById('table-section').style.display = 'block';
     }
 
     state.isLoading = true;
@@ -828,10 +822,7 @@
         if (!data.length) throw new Error();
         saveCache(data);
         state.allPrices = data;
-        state.lastUpdated = new Date();
         render();
-        document.getElementById('right-col').style.display = 'block';
-        document.getElementById('table-section').style.display = 'block';
       })
       .catch(() => {
         const now = new Date();
@@ -844,10 +835,7 @@
             if (!data2.length) throw new Error();
             saveCache(data2);
             state.allPrices = data2;
-            state.lastUpdated = new Date();
             render();
-            document.getElementById('right-col').style.display = 'block';
-            document.getElementById('table-section').style.display = 'block';
           })
           .catch(() => { if (!cached) showError(); });
       })
