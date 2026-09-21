@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elektrihind24 | Börsihind reaalajas — Täna & Homme</title>
+
+  <meta name="description" content="Elektrihind reaalajas Eestis. Börsihind täna ja homme, tunnihinnad koos KM-ga ja tarbimiskalkulaator. Uueneb automaatselt." />
+  <meta name="keywords" content="elektrihind, börsihind, elektrihind täna, elektrihind homme, NPS hind, Elering, elekter Eesti" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Elektrihind24.ee" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Elektrihind24 — Börsihind reaalajas" />
+  <meta property="og:description" content="Vaata elektri börsihinda reaalajas koos KM-ga. Tunnihinnad, odavaim periood ja tarbimiskalkulaator." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.elektrihind24.ee" />
+  <meta property="og:locale" content="et_EE" />
+  <meta property="og:image" content="https://www.elektrihind24.ee/og-preview.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Elektrihind24 — Börsihind reaalajas" />
+  <meta name="twitter:description" content="Elektri börsihind Eestis reaalajas koos KM-ga" />
+
+  <link rel="canonical" href="https://www.elektrihind24.ee" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Elektrihind24",
+    "description": "Elektri börsihind reaalajas Eestis koos käibemaksuga. Tunnihinnad, odavaim periood ja tarbimiskalkulaator.",
+    "url": "https://www.elektrihind24.ee",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "inLanguage": "et",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Mis on elektri börsihind ja kuidas see kujuneb?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Elektri börsihind on hind, millega elektrit müüakse ja ostetakse NordPooli elektribörsil. Hind kujuneb pakkumise ja nõudluse põhimõttel. Öösel ja tuulisel ilmal on hind tavaliselt madalam. Eestis kehtestatakse tunnipõhised hinnad päev ette kell 14:00–15:00."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kas börsihinnale üleminek on mulle kasulik?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Börsihind sobib hästi inimestele, kes saavad tarbimist paindlikult korraldada — pesta pesu öösel, laadida elektriautot odavamal ajal. Kui tarbimine on tasane, võib fikseeritud pakett olla lihtsam valik."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kust tulevad elektrihind24.ee andmed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hinnaandmed pärinevad Eesti elektrisüsteemi halduri Eleringu avalikust andmestikust, mis sünkroniseerib NordPooli elektribörsi andmed. Kõik hinnad on näidatud koos 24% käibemaksuga."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Millal on mõistlik suuri elektritarbijaid kasutada?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Üldjuhul on elekter odavam öösel (00:00–07:00) ja päevasel ajal (11:00–15:00). Kallimad tunnid on hommikune tipp (07:00–09:00) ja õhtune tipp (18:00–21:00)."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --bg-elevated: #12151a;
+      --card: #161a21;
+      --card-hover: #1c212b;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+
+      --accent: #00e5ff;
+      --accent-dim: rgba(0,229,255,0.12);
+      --accent-glow: rgba(0,229,255,0.18);
+
+      --text: #f0f2f5;
+      --text-secondary: #9aa3b2;
+      --text-muted: #6b7280;
+
+      --low: #00e8a0;
+      --low-bg: rgba(0,232,160,0.10);
+      --mid: #00e5ff;
+      --warn: #ffb347;
+      --warn-bg: rgba(255,179,71,0.10);
+      --high: #ff5c7a;
+      --high-bg: rgba(255,92,122,0.10);
+
+      --radius: 20px;
+      --radius-sm: 14px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========== HEADER ========== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,13,16,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent), #00b8d4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .logo-text h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .logo-text span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 600;
+    }
+
+    /* ========== MAIN LAYOUT ========== */
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .app.loaded {
+      opacity: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    @media (min-width: 860px) {
+      .grid {
+        grid-template-columns: 400px 1fr;
+        align-items: start;
+      }
+      .full {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* ========== WEATHER ========== */
+    .weather {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .weather-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .weather-temp {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .weather-loc {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ========== DAY SELECTOR ========== */
+    .day-selector {
+      display: flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 5px;
+      gap: 4px;
+    }
+
+    .day-btn {
+      flex: 1;
+      min-height: 46px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      border-radius: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .day-btn:hover {
+      color: var(--accent);
+    }
+
+    .day-btn.active {
+      background: var(--accent);
+      color: #0b0d10;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .day-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ========== MAIN PRICE CARD ========== */
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 22px 22px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .price-card::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      background: var(--accent-glow);
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--low-bg);
+      color: var(--low);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0,232,160,0.2);
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--low);
+      border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .price-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .price-value {
+      font-size: clamp(3.2rem, 12vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -3px;
+      margin: 0;
+    }
+
+    .price-unit {
+      font-size: 1.15rem;
+      font-weight: 600;
+      opacity: 0.6;
+      margin-left: 4px;
+    }
+
+    .price-level {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 22px 0 4px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 8px;
+      text-align: center;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .cheap-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(0,232,160,0.08), rgba(0,229,255,0.04));
+      border: 1px solid rgba(0,232,160,0.2);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 16px;
+      text-align: left;
+    }
+
+    .cheap-label {
+      font-size: 0.7rem;
+      color: var(--low);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      margin-bottom: 2px;
+    }
+
+    .cheap-time {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--low);
+    }
+
+    .cheap-avg {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .insight {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 14px;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .updated {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      opacity: 0.8;
+    }
+
+    /* ========== SECTION TITLE ========== */
+    .section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 1.4px;
+      font-weight: 700;
+      margin: 8px 0 12px 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ========== CHART ========== */
+    .chart-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      height: 300px;
+      position: relative;
+    }
+
+    /* ========== CALCULATOR ========== */
+    .calc-card {
+      background: var(--card);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      background-image: linear-gradient(145deg, rgba(0,229,255,0.03), transparent);
+    }
+
+    .calc-title {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .calc-select,
+    .calc-input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .calc-select {
+      appearance: none;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .calc-select:focus,
+    .calc-input:focus {
+      border-color: var(--accent);
+    }
+
+    .calc-btn {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--accent);
+      color: #0b0d10;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.875rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .calc-btn:hover {
+      opacity: 0.9;
+    }
+
+    .calc-btn:active {
+      transform: scale(0.98);
+    }
+
+    .calc-result {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-align: center;
+      margin-top: 16px;
+      min-height: 32px;
+    }
+
+    .calc-note {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    /* ========== TABLE ========== */
+    .table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .eh-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .eh-table th,
+    .eh-table td {
+      padding: 11px 14px;
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eh-table th {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      background: rgba(255,255,255,0.02);
+      font-weight: 700;
+    }
+
+    .eh-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .eh-table tr.current {
+      background: rgba(0,229,255,0.06);
+    }
+
+    .price-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    /* ========== FAQ ========== */
+    .faq {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-q {
+      padding: 16px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      user-select: none;
+      transition: color 0.2s;
+      line-height: 1.4;
+    }
+
+    .faq-q:hover,
+    .faq-q.open {
+      color: var(--accent);
+    }
+
+    .faq-chevron {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      transition: transform 0.25s ease, color 0.2s;
+    }
+
+    .faq-q.open .faq-chevron {
+      transform: rotate(180deg);
+      color: var(--accent);
+    }
+
+    .faq-a {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-a.open {
+      max-height: 600px;
+      padding: 0 20px 18px;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 100px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .footer-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .footer-links a:hover {
+      opacity: 0.75;
+    }
+
+    /* ========== MODALS ========== */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 24px;
+      max-width: 520px;
+      margin: 40px auto;
+      line-height: 1.65;
+    }
+
+    .modal-content h2 {
+      margin: 0 0 16px;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+
+    .modal-content h4 {
+      margin: 18px 0 6px;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .modal-content p,
+    .modal-content li {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0 0 8px;
+    }
+
+    .modal-content ul {
+      padding-left: 18px;
+    }
+
+    .close-btn {
+      display: block;
+      width: 100%;
+      margin-top: 24px;
+      background: var(--accent);
+      color: #0b0d10;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* ========== COOKIE BANNER ========== */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #141820;
+      border-top: 1px solid rgba(0,229,255,0.12);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      z-index: 500;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+
+    .cookie-text {
+      flex: 1;
+      min-width: 200px;
+      line-height: 1.5;
+    }
+
+    .cookie-text a {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .cookie-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cookie-accept {
+      background: var(--accent);
+      color: #0b0d10;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .cookie-decline {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    body.has-cookie {
+      padding-bottom: 80px;
+    }
+
+    /* ========== LOADER / ERROR ========== */
+    .loader-card,
+    .error-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 50px 24px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--high);
+      margin-bottom: 6px;
+    }
+
+    .error-sub {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .retry-btn {
+      margin-top: 16px;
+      background: var(--high);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .spinner, .live-dot {
+        animation: none;
+      }
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">⚡</div>
+        <div class="logo-text">
+          <h1>Elektrihind24</h1>
+          <span>Börsihind reaalajas · Eesti</span>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <noscript>
+    <div style="background:#161a21;border:1px solid rgba(255,92,122,0.3);border-radius:16px;padding:20px;margin:20px;color:#9aa3b2;text-align:center;">
+      <strong style="color:#ff5c7a;">JavaScript on vajalik</strong><br>
+      Elektrihind24 nõuab JavaScripti. Palun luba see brauseri seadetes.
+    </div>
+  </noscript>
+
+  <main class="app" id="app">
+    <div class="grid">
+
+      <!-- LEFT COLUMN -->
+      <div>
+        <div class="weather" id="weather">
+          <span class="weather-loading">☀ Laadin ilmainfot...</span>
+        </div>
+
+        <div class="day-selector" style="margin-top:14px;">
+          <button class="day-btn active" id="btn-today" onclick="setView('today')">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L4.09 12.96A1 1 0 005 14.5h6.5L10 22l9.41-10.46A1 1 0 0018.5 10H12L13 2z"/></svg>
+            Täna
+          </button>
+          <button class="day-btn" id="btn-tomorrow" onclick="setView('tomorrow')">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            Homme
+          </button>
+        </div>
+
+        <div id="viz" style="margin-top:14px;">
+          <div class="loader-card">
+            <div class="spinner"></div>
+            <div style="color:var(--text-muted);font-size:0.875rem;">Laadin börsihinda...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div id="right-col" style="display:none;">
+        <div class="section-title">Hinnagraafik</div>
+        <div class="chart-card">
+          <canvas id="priceChart"></canvas>
+        </div>
+
+        <div class="section-title" style="margin-top:22px;">Kalkulaator</div>
+        <div class="calc-card">
+          <div class="calc-title">Arvuta kulu hetkehinnaga</div>
+          <div class="calc-grid">
+            <div class="select-wrap">
+              <select class="calc-select" id="preset" onchange="updatePreset()">
+                <option value="custom">Sisesta ise (kWh)</option>
+                <option value="sauna">Saun ~13.5 kWh</option>
+                <option value="car">Elektriauto ~20 kWh</option>
+                <option value="wash">Pesumasin ~2 kWh</option>
+                <option value="boiler">Boiler 80L ~2 kWh</option>
+                <option value="dishwasher">Nõudepesumasin ~1.2 kWh</option>
+              </select>
+            </div>
+            <input class="calc-input" id="kwh" type="number" min="0.1" max="9999" step="0.1" placeholder="kWh kogus" />
+          </div>
+          <button class="calc-btn" onclick="doCalc()">ARVUTA KULU</button>
+          <div class="calc-result" id="calc-result"></div>
+          <div class="calc-note" id="calc-note"></div>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="full" id="table-section" style="display:none;">
+        <div class="section-title">Tunnihinnad</div>
+        <div class="table-card" id="table-container"></div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="full">
+        <div class="section-title" style="margin-top:28px;">Korduma kippuvad küsimused</div>
+        <div class="faq">
+          <div class="faq-item">
+            <div class="faq-q open" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+              Mis on elektri börsihind ja kuidas see kujuneb?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="faq-a open">Elektri börsihind on hind, millega elektrit müüakse ja ostetakse NordPooli elektribörsil. Hind kujuneb pakkumise ja nõudluse põhimõttel — kui nõudlus on suur (hommiku- ja õhtusel tipptunnil) ning tootmine väike, on hind kõrge. Öösel ja tuulisel ilmal on hind tavaliselt madalam. Eestis kehtestatakse tunnipõhised hinnad päev ette kell 14:00–15:00.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+              Kas börsihinnale üleminek on mulle kasulik?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="faq-a">Börsihind sobib hästi inimestele, kes saavad tarbimist paindlikult korraldada — pesta pesu öösel, laadida elektriautot odavamal ajal või kasutada ajastusega pistikuid. Kui tarbimine on tasane, võib fikseeritud pakett olla lihtsam valik. Börsihinna paketi kasutajal on hea hoida silm peal hindade muutumisel elektrihind24.ee abil.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+              Miks on hind näidatud sentides kWh kohta koos KM-ga?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="faq-a">Elektrihind24.ee näitab hinda sentides kWh kohta (s/kWh) koos 24% käibemaksuga (KM). NordPooli börsil on hinnad eurodes MWh kohta — meie teisendame need Eesti tarbijale tuttavasse formaati. Arve lõpphind sisaldab lisaks börsihinnale võrguteenuse tasu, taastuvenergia tasu jm komponente, mida käesolev rakendus ei kuva.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+              Millal on mõistlik suuri elektritarbijaid kasutada?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="faq-a">Üldjuhul on elekter odavam öösel (00:00–07:00) ja päevasel ajal (11:00–15:00). Kallimad tunnid on hommikune tipp (07:00–09:00) ja õhtune tipp (18:00–21:00). Elektrihind24.ee kuvab iga päeva odavaima perioodi eraldi banneri all, et saaksid plaanida pesumasina, nõudepesumasina või boileri kasutamist optimaalselt.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+              Kust tulevad elektrihind24.ee andmed?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="faq-a">Hinnaandmed pärinevad Eesti elektrisüsteemi halduri Eleringu avalikust andmestikust, mis sünkroniseerib NordPooli elektribörsi hinnad. Leht uueneb automaatselt iga 5 minuti järel — homsed hinnad ilmuvad igal tööpäeval umbes kell 14:30. Kõik hinnad on näidatud sentides kWh kohta koos 24% käibemaksuga (KM).</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+              Kuidas kasutada tarbimiskalkulaatorit?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="faq-a">Vali rippmenüüst eelseadistatud seade (saun, elektriauto, pesumasin jne) või sisesta ise kWh kogus. Vajuta „Arvuta kulu“ ning kalkulaator arvutab hetkehinnaga ligikaudse kulu eurodes. Tulemus näitab ainult elektrihinna komponenti koos KM-ga, ilma võrguteenuse tasuta.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a onclick="openModal('tips')">Säästunipid</a>
+      <a onclick="openModal('privacy')">Privaatsus</a>
+      <a onclick="openModal('contact')">Kontakt</a>
+      <a href="https://dashboard.elering.ee" target="_blank" rel="noopener noreferrer">Elering ↗</a>
+    </div>
+    <div>
+      © 2026 Elektrihind24.ee · Hinnad koos KM 24% · Andmed: Elering / NordPool<br>
+      <span style="font-size:0.7rem;opacity:0.7;">Leht on informatiivne. Täpse arve saad oma elektrimüüjalt.</span>
+    </div>
+  </footer>
+
+  <!-- Cookie banner -->
+  <div class="cookie-banner" id="cookie-banner">
+    <div class="cookie-text">
+      Kasutame küpsiseid Google Analytics statistika kogumiseks anonüümselt.
+      <a onclick="openModal('privacy')">Loe lähemalt</a>
+    </div>
+    <div class="cookie-btns">
+      <button class="cookie-decline" onclick="cookieDecline()">Keeldu</button>
+      <button class="cookie-accept" onclick="cookieAccept()">Nõustun</button>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal" id="modal-tips" onclick="closeModalOutside(event,'tips')">
+    <div class="modal-content">
+      <h2>Elektriarve säästunipid</h2>
+      <h4>Kasuta suuri tarbijaid öisel odaval ajal</h4>
+      <p>Seadista pesumasin, kuivati ja nõudepesumasin ööprogrammile — kell 00:00–07:00 on elekter tavaliselt kõige odavam. Kasuta seadmete sisseehitatud taimerit.</p>
+      <h4>Elektriauto laadimine</h4>
+      <p>Seadista auto laadimisaeg ööle. Enamik elektriautosid ja laadimisjaamade äppe lubavad sisestada odava laadimise ajavahemiku.</p>
+      <h4>Küte ja boiler</h4>
+      <p>Kui kasutad elektriboilerit või akukütet, lase neil laadida end odava öise elektriga. Pane boiler taimerile 01:00–06:00.</p>
+      <h4>Nutikad pistikud</h4>
+      <p>Investeeri nutipistikutesse (nt Shelly). Paljud koduautomaatika lahendused saavad automaatselt lülitada seadmeid vastavalt börsihinnale.</p>
+      <h4>Planeeri odavaima perioodi järgi</h4>
+      <p>Elektrihind24 näitab iga päev odavaimat 3-tunnist perioodi. Seadista just sellele ajale suuremad tarbijad.</p>
+      <button class="close-btn" onclick="closeModal('tips')">Sulge</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-privacy" onclick="closeModalOutside(event,'privacy')">
+    <div class="modal-content">
+      <h2>Privaatsuspoliitika</h2>
+      <p><strong>Elektrihind24.ee</strong> · Viimati uuendatud: veebruar 2026</p>
+      <h4>Kogutavad andmed</h4>
+      <p>Elektrihind24.ee on anonüümne informatiivne teenus. Me ei kogu ega töötle isikuandmeid. Lehte kasutamiseks ei pea registreeruma.</p>
+      <h4>Küpsised</h4>
+      <p>Kasutame Google Analytics küpsiseid külastusstatistika kogumiseks anonüümselt, ainult teie nõusolekul.</p>
+      <h4>Kolmandad osapooled</h4>
+      <ul>
+        <li><strong>Google Analytics</strong> — anonüümne statistika (ainult nõusolekul)</li>
+        <li><strong>Elering API</strong> — elektrihinna andmed</li>
+        <li><strong>Open-Meteo</strong> — ilmaandmed</li>
+        <li><strong>OpenStreetMap Nominatim</strong> — linna nimi</li>
+        <li><strong>Google Fonts</strong> — fondid</li>
+        <li><strong>jsDelivr</strong> — Chart.js</li>
+      </ul>
+      <h4>Kontakt</h4>
+      <p>Privaatsusküsimuste puhul: <strong>info@elektrihind24.ee</strong></p>
+      <button class="close-btn" onclick="closeModal('privacy')">Sulge</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-contact" onclick="closeModalOutside(event,'contact')">
+    <div class="modal-content">
+      <h2>Kontakt</h2>
+      <h4>Üldinfo ja koostöö</h4>
+      <p>E-post: <strong>info@elektrihind24.ee</strong></p>
+      <h4>Tehniline tugi</h4>
+      <p>Märkasid viga? Anna meile teada — vastame esimesel võimalusel.</p>
+      <h4>Reklaam</h4>
+      <p>Pakume reklaamivõimalusi elektrienergeetika valdkonna ettevõtetele.</p>
+      <button class="close-btn" onclick="closeModal('contact')">Sulge</button>
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+
+  const CONFIG = {
+    SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwOcEVNcbo6h9_yzKMfCVvonZBmgSZdOauCQawGnDhLtyad6NIMoIe-EMIuRjK2hdbd/exec",
+    ELERING_API: "https://dashboard.elering.ee/api/nps/price",
+    VAT: 1.24,
+    FETCH_TIMEOUT_MS: 10000,
+    REFRESH_INTERVAL_MS: 5 * 60 * 1000,
+    CACHE_TTL_MS: 4 * 60 * 1000,
+    WEATHER_API: "https://api.open-meteo.com/v1/forecast"
+  };
+
+  const PRESETS = {
+    custom: 0,
+    sauna: 13.5,
+    car: 20,
+    wash: 2,
+    boiler: 2,
+    dishwasher: 1.2
+  };
+
+  const state = {
+    allPrices: [],
+    currentView: 'today',
+    currentLivePrice: 0,
+    charts: { main: null },
+    isLoading: false,
+    lastUpdated: null
+  };
+
+  /* ========== HELPERS ========== */
+  function getPriceColor(price) {
+    if (price < 5)  return 'var(--low)';
+    if (price < 12) return 'var(--mid)';
+    if (price < 20) return 'var(--warn)';
+    return 'var(--high)';
+  }
+
+  function getPriceLevel(price) {
+    if (price < 5)  return 'Väga odav';
+    if (price < 12) return 'Soodne';
+    if (price < 20) return 'Keskmine';
+    return 'Kallis';
+  }
+
+  function getPriceLevelEmoji(price) {
+    if (price < 5)  return '🟢';
+    if (price < 12) return '🔵';
+    if (price < 20) return '🟡';
+    return '🔴';
+  }
+
+  function findCheapPeriod(pool, numHours) {
+    if (!pool || !pool.length) return [];
+    if (pool.length < numHours) {
+      return [pool.reduce((b, p) => p.price < b.price ? p : b, pool[0])];
+    }
+    let best = 0, bestSum = Infinity;
+    for (let i = 0; i <= pool.length - numHours; i++) {
+      let sum = 0;
+      for (let j = i; j < i + numHours; j++) sum += pool[j].price;
+      if (sum < bestSum) { bestSum = sum; best = i; }
+    }
+    return pool.slice(best, best + numHours);
+  }
+
+  function findUpcomingCheapPeriod(processed, numHours, curHour) {
+    if (curHour < 0) return findCheapPeriod(processed, numHours);
+    const upcoming = processed.filter(p => p.hour >= curHour);
+    if (!upcoming.length) return findCheapPeriod(processed, numHours);
+    return findCheapPeriod(upcoming, numHours);
+  }
+
+  function generateInsight(processed, avg, curHour) {
+    if (!processed.length) return '';
+    const cheapPeriod = findUpcomingCheapPeriod(processed, 3, curHour);
+    if (!cheapPeriod.length) return '';
+
+    const cheapStart = cheapPeriod[0].hour;
+    const cheapEnd   = cheapPeriod[cheapPeriod.length - 1].hour + 1;
+    const cheapAvg   = (cheapPeriod.reduce((a,p) => a + p.price, 0) / cheapPeriod.length).toFixed(2);
+    const inCheapNow = cheapPeriod.some(p => p.hour === curHour);
+
+    let trend = '';
+    const cur = processed.find(p => p.hour === curHour);
+    const future = processed.find(p => p.hour === (curHour + 3) % 24);
+    if (cur && future) {
+      const diff = future.price - cur.price;
+      if (diff > 2)       trend = ` Hind tõuseb ~${diff.toFixed(1)} s/kWh järgmise 3 tunniga.`;
+      else if (diff < -2) trend = ` Hind langeb ~${Math.abs(diff).toFixed(1)} s/kWh järgmise 3 tunniga.`;
+    }
+
+    if (inCheapNow) {
+      return `Praegu on odav! Odav periood kestab kuni kell ${cheapEnd}:00 (${cheapAvg} s/kWh). Hea aeg pesumasin ja boiler käivitada.` + trend;
+    }
+    if (avg < 5) {
+      return `Täna on elekter üldiselt odav (${avg.toFixed(2)} s/kWh). Järgmine odav periood kell ${cheapStart}:00–${cheapEnd}:00 (${cheapAvg} s/kWh).` + trend;
+    }
+    if (avg > 20) {
+      return `Täna on hinnad kõrged. Järgmine soodsam periood kell ${cheapStart}:00–${cheapEnd}:00 (${cheapAvg} s/kWh).` + trend;
+    }
+    return `Järgmine odav periood kell ${cheapStart}:00–${cheapEnd}:00 (${cheapAvg} s/kWh). Planeeri pesumasin, auto ja boiler sellele ajale.` + trend;
+  }
+
+  function animateNumber(el, target, ms) {
+    const startTime = performance.now();
+    function tick(now) {
+      const p = Math.min((now - startTime) / ms, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      if (el) el.textContent = (target * eased).toFixed(2);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function fetchWithTimeout(url, ms) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { signal: ctrl.signal })
+      .then(r => { clearTimeout(timer); return r; })
+      .catch(e => { clearTimeout(timer); throw e; });
+  }
+
+  /* ========== WEATHER ========== */
+  const WMO_CODES = {
+    0:'Selge',1:'Peamiselt selge',2:'Osaliselt pilves',3:'Pilves',
+    45:'Udu',48:'Härmatis',
+    51:'Kerge uduvihm',53:'Uduvihm',55:'Tihe uduvihm',
+    61:'Kerge vihm',63:'Vihm',65:'Tugev vihm',
+    71:'Kerge lumi',73:'Lumi',75:'Tugev lumi',77:'Rahe',
+    80:'Sajuhood',81:'Tugevad sajuhood',82:'Väga tugevad sajuhood',
+    85:'Lumesajuhood',86:'Tugevad lumesajuhood',
+    95:'Äike',96:'Äike rahehooga',99:'Tugev äike rahehooga'
+  };
+  const WMO_ICONS = {
+    0:'☀️',1:'🌤️',2:'⛅',3:'☁️',
+    45:'🌫️',48:'🌫️',
+    51:'🌦️',53:'🌦️',55:'🌧️',
+    61:'🌧️',63:'🌧️',65:'🌧️',
+    71:'🌨️',73:'❄️',75:'❄️',77:'🌨️',
+    80:'🌦️',81:'🌧️',82:'⛈️',
+    85:'🌨️',86:'🌨️',
+    95:'⛈️',96:'⛈️',99:'⛈️'
+  };
+
+  function renderWeather(w) {
+    const bar = document.getElementById('weather');
+    if (!bar) return;
+    const icon = WMO_ICONS[w.wmo] || '🌡️';
+    const desc = WMO_CODES[w.wmo] || '';
+    const wind = w.wind ? ` · Tuul ${Math.round(w.wind)} km/h` : '';
+    const feels = (w.feels !== undefined) ? ` Tundub ${Math.round(w.feels)}°` : '';
+    bar.innerHTML = `
+      <span class="weather-icon">${icon}</span>
+      <div>
+        <span class="weather-temp">${Math.round(w.temp)}°C</span>
+        <div style="font-size:0.8rem;color:var(--text-muted)">${desc}${wind}${feels}</div>
+      </div>
+      <div class="weather-loc">${w.city || 'Sinu asukoht'}</div>`;
+  }
+
+  function loadWeather(lat, lon, city) {
+    const url = `${CONFIG.WEATHER_API}?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=temperature_2m,apparent_temperature,weathercode,windspeed_10m&wind_speed_unit=kmh&timezone=auto`;
+    fetchWithTimeout(url, 6000)
+      .then(r => { if (!r.ok) throw new Error('Ilm HTTP ' + r.status); return r.json(); })
+      .then(j => {
+        const c = j.current;
+        if (!c) throw new Error('Ilmaandmed puuduvad');
+        renderWeather({
+          temp: c.temperature_2m,
+          feels: c.apparent_temperature,
+          wmo: c.weathercode,
+          wind: c.windspeed_10m,
+          city
+        });
+      })
+      .catch(() => {
+        const bar = document.getElementById('weather');
+        if (bar) bar.style.display = 'none';
+      });
+  }
+
+  function initWeather() {
+    if (!navigator.geolocation) {
+      loadWeather(59.437, 24.754, 'Tallinn');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        let city = `${lat.toFixed(1)}°N, ${lon.toFixed(1)}°E`;
+        fetchWithTimeout(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=et`, 4000)
+          .then(r => r.json())
+          .then(geo => {
+            const addr = geo.address || {};
+            city = addr.city || addr.town || addr.village || addr.county || city;
+            loadWeather(lat, lon, city);
+          })
+          .catch(() => loadWeather(lat, lon, city));
+      },
+      () => loadWeather(59.437, 24.754, 'Tallinn'),
+      { timeout: 5000, maximumAge: 300000 }
+    );
+  }
+
+  /* ========== MODALS & COOKIES ========== */
+  function openModal(id) {
+    document.getElementById('modal-' + id).style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById('modal-' + id).style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function closeModalOutside(e, id) {
+    if (e.target === document.getElementById('modal-' + id)) closeModal(id);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      ['tips','privacy','contact'].forEach(id => {
+        const m = document.getElementById('modal-' + id);
+        if (m && m.style.display === 'block') closeModal(id);
+      });
+    }
+  });
+
+  function cookieAccept() {
+    try { localStorage.setItem('cookieConsent', 'accepted'); } catch(e) {}
+    document.getElementById('cookie-banner').style.display = 'none';
+    document.body.classList.remove('has-cookie');
+  }
+  function cookieDecline() {
+    try { localStorage.setItem('cookieConsent', 'declined'); } catch(e) {}
+    document.getElementById('cookie-banner').style.display = 'none';
+    document.body.classList.remove('has-cookie');
+  }
+  (function initCookie() {
+    let consent = null;
+    try { consent = localStorage.getItem('cookieConsent'); } catch(e) {}
+    if (consent) {
+      document.getElementById('cookie-banner').style.display = 'none';
+    } else {
+      document.body.classList.add('has-cookie');
+    }
+  })();
+
+  /* ========== FAQ ========== */
+  function toggleFaq(qEl) {
+    const aEl = qEl.nextElementSibling;
+    const isOpen = qEl.classList.contains('open');
+    document.querySelectorAll('.faq-q.open').forEach(el => {
+      el.classList.remove('open');
+      el.nextElementSibling.classList.remove('open');
+    });
+    if (!isOpen) {
+      qEl.classList.add('open');
+      aEl.classList.add('open');
+    }
+  }
+
+  /* ========== CACHE ========== */
+  function saveCache(data) {
+    try { localStorage.setItem('eh_cache', JSON.stringify({ data, ts: Date.now() })); } catch(e) {}
+  }
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem('eh_cache');
+      if (!raw) return null;
+      const c = JSON.parse(raw);
+      if (Date.now() - c.ts < CONFIG.CACHE_TTL_MS) return c.data;
+    } catch(e) {}
+    return null;
+  }
+
+  /* ========== DATA LOADING ========== */
+  function loadData() {
+    if (state.isLoading) return;
+
+    const cached = loadCache();
+    if (cached && cached.length) {
+      state.allPrices = cached;
+      render();
+      document.getElementById('app').classList.add('loaded');
+      document.getElementById('right-col').style.display = 'block';
+      document.getElementById('table-section').style.display = 'block';
+    }
+
+    if (state.isLoading) return;
+    state.isLoading = true;
+    if (!cached) showLoader();
+
+    fetchWithTimeout(CONFIG.SCRIPT_URL + '?t=' + Date.now(), CONFIG.FETCH_TIMEOUT_MS)
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(json => {
+        const data = (json.data && json.data.ee) ? json.data.ee : (json.data || []);
+        if (!data.length) throw new Error('Tühi andmestik');
+        saveCache(data);
+        state.allPrices = data;
+        state.lastUpdated = new Date();
+        render();
+        document.getElementById('app').classList.add('loaded');
+        document.getElementById('right-col').style.display = 'block';
+        document.getElementById('table-section').style.display = 'block';
+      })
+      .catch(err => {
+        console.warn('Apps Script ebaõnnestus, proovime Eleringit:', err);
+        const now = new Date();
+        const start = new Date(now); start.setHours(0,0,0,0);
+        const end = new Date(now); end.setDate(end.getDate() + 1); end.setHours(23,59,59,0);
+        const url = `${CONFIG.ELERING_API}?start=${encodeURIComponent(start.toISOString())}&end=${encodeURIComponent(end.toISOString())}`;
+        return fetchWithTimeout(url, CONFIG.FETCH_TIMEOUT_MS)
+          .then(res2 => {
+            if (!res2.ok) throw new Error('Elering HTTP ' + res2.status);
+            return res2.json();
+          })
+          .then(json2 => {
+            const data2 = (json2.data && json2.data.ee) ? json2.data.ee : [];
+            if (!data2.length) throw new Error('Elering: tühi vastus');
+            saveCache(data2);
+            state.allPrices = data2;
+            state.lastUpdated = new Date();
+            render();
+            document.getElementById('app').classList.add('loaded');
+            document.getElementById('right-col').style.display = 'block';
+            document.getElementById('table-section').style.display = 'block';
+          });
+      })
+      .catch(err2 => {
+        console.error('Mõlemad allikad ebaõnnestusid:', err2);
+        if (!cached) showError();
+      })
+      .finally(() => { state.isLoading = false; });
+  }
+
+  function showLoader() {
+    document.getElementById('viz').innerHTML = `
+      <div class="loader-card">
+        <div class="spinner"></div>
+        <div style="color:var(--text-muted);font-size:0.875rem;">Laadin börsihinda...</div>
+      </div>`;
+  }
+
+  function showError() {
+    document.getElementById('app').classList.add('loaded');
+    document.getElementById('viz').innerHTML = `
+      <div class="error-card">
+        <div class="error-title">Andmete laadimine ebaõnnestus</div>
+        <div class="error-sub">Kontrolli internetiühendust ja proovi uuesti.</div>
+        <button class="retry-btn" onclick="loadData()">Proovi uuesti ↺</button>
+      </div>`;
+  }
+
+  /* ========== VIEW SWITCH ========== */
+  function setView(v) {
+    state.currentView = v;
+    document.getElementById('btn-today').className = v === 'today' ? 'day-btn active' : 'day-btn';
+    document.getElementById('btn-tomorrow').className = v === 'tomorrow' ? 'day-btn active' : 'day-btn';
+    render();
+  }
+
+  /* ========== RENDER ========== */
+  function render() {
+    if (!state.allPrices.length) return;
+    const now = new Date();
+    const targetDate = new Date();
+    if (state.currentView === 'tomorrow') targetDate.setDate(now.getDate() + 1);
+
+    const dayData = state.allPrices.filter(d => {
+      const dd = new Date(d.timestamp * 1000);
+      return dd.getDate() === targetDate.getDate() && dd.getMonth() === targetDate.getMonth();
+    });
+
+    if (state.currentView === 'tomorrow' && dayData.length < 10) {
+      document.getElementById('viz').innerHTML = `
+        <div class="price-card">
+          <div style="font-size:2rem;margin-bottom:10px;">🕒</div>
+          <div style="font-size:1.1rem;font-weight:800;margin-bottom:8px;">Homsed hinnad pole veel saadaval</div>
+          <div style="font-size:0.875rem;color:var(--text-muted);">Hinnad avaldatakse igal tööpäeval u. kell 14:30</div>
+        </div>`;
+      document.getElementById('right-col').style.display = 'none';
+      document.getElementById('table-section').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('right-col').style.display = 'block';
+    document.getElementById('table-section').style.display = 'block';
+
+    const processed = dayData.map(d => ({
+      hour: new Date(d.timestamp * 1000).getHours(),
+      price: Math.max(0, parseFloat(((d.price / 10) * CONFIG.VAT).toFixed(2)))
+    })).sort((a,b) => a.hour - b.hour);
+
+    if (!processed.length) { showError(); return; }
+
+    const prices = processed.map(p => p.price);
+    const maxVal = Math.max(...prices);
+    const minVal = Math.min(...prices);
+    const avgVal = parseFloat((prices.reduce((a,b) => a+b, 0) / prices.length).toFixed(2));
+    const curHour = now.getHours();
+    const curObj = processed.find(p => p.hour === curHour);
+    state.currentLivePrice = curObj ? curObj.price : avgVal;
+
+    const cheapPeriod = state.currentView === 'today'
+      ? findUpcomingCheapPeriod(processed, 3, curHour)
+      : findCheapPeriod(processed, 3);
+    const cheapStart = cheapPeriod.length ? cheapPeriod[0].hour : 0;
+    const cheapEnd   = cheapPeriod.length ? cheapPeriod[cheapPeriod.length-1].hour + 1 : 0;
+    const cheapAvg   = cheapPeriod.length
+      ? (cheapPeriod.reduce((a,p) => a + p.price, 0) / cheapPeriod.length).toFixed(2)
+      : minVal.toFixed(2);
+
+    const displayPrice = state.currentView === 'today' ? state.currentLivePrice : avgVal;
+    const priceColor = getPriceColor(displayPrice);
+    const insightText = state.currentView === 'today'
+      ? generateInsight(processed, avgVal, curHour)
+      : `Odavaim periood homme: ${cheapStart}:00–${cheapEnd}:00 (${cheapAvg} s/kWh). Planeeri suuremad tarbijad sellele ajale.`;
+
+    const isToday = state.currentView === 'today';
+    const updTime = state.lastUpdated
+      ? state.lastUpdated.toLocaleTimeString('et-EE', {hour:'2-digit', minute:'2-digit'})
+      : '';
+
+    document.getElementById('viz').innerHTML = `
+      <div class="price-card">
+        ${isToday ? '<div class="live-badge"><div class="live-dot"></div>REAALAJAS</div>' : ''}
+        <div class="price-label">${isToday ? 'Hind hetkel' : 'Homne keskmine'}</div>
+        <div>
+          <span class="price-value" id="price-anim" style="color:${priceColor}">0.00</span>
+          <span class="price-unit" style="color:${priceColor}">s/kWh</span>
+        </div>
+        <div class="price-level">${getPriceLevelEmoji(displayPrice)} ${getPriceLevel(displayPrice)}</div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-label">Min</span>
+            <span class="stat-value" style="color:var(--low)">${minVal.toFixed(2)}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Keskmine</span>
+            <span class="stat-value">${avgVal.toFixed(2)}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Max</span>
+            <span class="stat-value" style="color:var(--high)">${maxVal.toFixed(2)}</span>
+          </div>
+        </div>
+        <div class="cheap-banner">
+          <div>
+            <div class="cheap-label">Odavaim periood</div>
+            <div class="cheap-time">${cheapStart}:00–${cheapEnd}:00</div>
+            <div class="cheap-avg">${cheapAvg} s/kWh keskmine</div>
+          </div>
+          <div style="font-size:1.5rem">🔋</div>
+        </div>
+        <div class="insight">${insightText}</div>
+        ${updTime ? `<div class="updated">Uuendatud: ${updTime}</div>` : ''}
+      </div>`;
+
+    const el = document.getElementById('price-anim');
+    if (el) animateNumber(el, displayPrice, 750);
+
+    updateMainChart(processed, curHour);
+    renderTable(processed, minVal, maxVal, curHour);
+  }
+
+  /* ========== CHART ========== */
+  function updateMainChart(data, curHour) {
+    try { if (state.charts.main) state.charts.main.destroy(); } catch(e) {}
+    state.charts.main = null;
+
+    const canvas = document.getElementById('priceChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const pointColors = data.map(p => getPriceColor(p.price));
+    const pointRadii  = data.map(p => (p.hour === curHour && state.currentView === 'today') ? 7 : 2);
+
+    state.charts.main = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(p => p.hour + ':00'),
+        datasets: [{
+          label: 's/kWh',
+          data: data.map(p => p.price),
+          borderColor: '#00e5ff',
+          borderWidth: 2.5,
+          backgroundColor: (context) => {
+            const chart = context.chart;
+            const {ctx, chartArea} = chart;
+            if (!chartArea) return 'rgba(0,229,255,0.1)';
+            const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            g.addColorStop(0, 'rgba(0,229,255,0.28)');
+            g.addColorStop(1, 'rgba(0,229,255,0)');
+            return g;
+          },
+          fill: true,
+          tension: 0.4,
+          pointRadius: pointRadii,
+          pointBackgroundColor: pointColors,
+          pointBorderColor: '#fff',
+          pointBorderWidth: data.map(p => (p.hour === curHour && state.currentView === 'today') ? 2 : 0)
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#161a21',
+            borderColor: 'rgba(0,229,255,0.25)',
+            borderWidth: 1,
+            titleColor: '#9aa3b2',
+            bodyColor: '#f0f2f5',
+            padding: 12,
+            callbacks: {
+              title: c => 'Kell ' + c[0].label,
+              label: c => ` ${c.parsed.y.toFixed(2)} s/kWh  ${getPriceLevelEmoji(c.parsed.y)} ${getPriceLevel(c.parsed.y)}`
+            }
+          }
+        },
+        scales: {
+          y: {
+            border: { display: false },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            ticks: {
+              color: '#6b7280',
+              font: { size: 11 },
+              callback: v => v + ' s'
+            },
+            beginAtZero: true
+          },
+          x: {
+            border: { display: false },
+            grid: { display: false },
+            ticks: { color: '#6b7280', font: { size: 11 }, maxTicksLimit: 12 }
+          }
+        }
+      }
+    });
+  }
+
+  /* ========== CALCULATOR ========== */
+  function updatePreset() {
+    const val = document.getElementById('preset').value;
+    const kwhEl = document.getElementById('kwh');
+    if (val !== 'custom' && PRESETS[val]) {
+      kwhEl.value = PRESETS[val];
+    } else {
+      kwhEl.value = '';
+      kwhEl.focus();
+    }
+    document.getElementById('calc-result').innerHTML = '';
+    document.getElementById('calc-note').innerHTML = '';
+  }
+
+  function doCalc() {
+    const kwh = parseFloat(document.getElementById('kwh').value);
+    const resultEl = document.getElementById('calc-result');
+    const noteEl = document.getElementById('calc-note');
+
+    if (!kwh || kwh <= 0) {
+      resultEl.innerHTML = '<span style="color:var(--high);font-size:0.9rem;">Sisesta kWh kogus</span>';
+      noteEl.innerHTML = '';
+      return;
+    }
+    if (!state.currentLivePrice) {
+      resultEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.9rem;">Ootame hinda...</span>';
+      return;
+    }
+
+    const cost = (kwh * state.currentLivePrice / 100).toFixed(2);
+    resultEl.innerHTML = `Kulu: <strong>${cost} €</strong>`;
+    noteEl.innerHTML = 'Ainult börsihind koos KM 24% · v.a. võrguteenus';
+  }
+
+  /* ========== TABLE ========== */
+  function renderTable(data, minVal, maxVal, curHour) {
+    let html = `<table class="eh-table"><thead><tr>
+      <th>TUND</th><th>HIND (s/kWh)</th><th>TASE</th>
+    </tr></thead><tbody>`;
+
+    data.forEach(p => {
+      const isMin = Math.abs(p.price - minVal) < 0.001;
+      const isMax = Math.abs(p.price - maxVal) < 0.001;
+      const isCur = (p.hour === curHour && state.currentView === 'today');
+
+      let pillBg, pillColor;
+      if (isMin)      { pillBg = 'var(--low-bg)';  pillColor = 'var(--low)'; }
+      else if (isMax) { pillBg = 'var(--high-bg)'; pillColor = 'var(--high)'; }
+      else            { pillBg = 'rgba(255,255,255,0.04)'; pillColor = 'var(--text)'; }
+
+      const rowClass = isCur ? ' class="current"' : '';
+      const hourLabel = (isCur ? '▶ ' : '') + p.hour + ':00';
+      const taseText = isMin ? '🟢 Min' : (isMax ? '🔴 Max' : `${getPriceLevelEmoji(p.price)} ${getPriceLevel(p.price)}`);
+
+      html += `<tr${rowClass}>
+        <td style="color:${isCur ? 'var(--accent)' : 'var(--text)'};font-weight:${isCur ? 800 : 600}">${hourLabel}</td>
+        <td><span class="price-pill" style="background:${pillBg};color:${pillColor}">${p.price.toFixed(2)}</span></td>
+        <td style="font-size:0.75rem;color:var(--text-muted)">${taseText}</td>
+      </tr>`;
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('table-container').innerHTML = html;
+  }
+
+  /* ========== SWIPE ========== */
+  (function() {
+    let sx = 0, sy = 0;
+    document.addEventListener('touchstart', e => {
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', e => {
+      const dx = sx - e.changedTouches[0].clientX;
+      const dy = Math.abs(sy - e.changedTouches[0].clientY);
+      if (Math.abs(dx) > 60 && dy < 40) {
+        const nv = dx > 0 ? 'tomorrow' : 'today';
+        if (nv !== state.currentView) setView(nv);
+      }
+    }, { passive: true });
+  })();
+
+  /* ========== AUTO REFRESH ========== */
+  setInterval(() => {
+    if (document.visibilityState === 'visible') loadData();
+  }, CONFIG.REFRESH_INTERVAL_MS);
+
+  /* ========== START ========== */
+  loadData();
+  initWeather();
+  </script>
+</body>
+</html>
