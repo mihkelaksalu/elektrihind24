@@ -557,7 +557,7 @@
           <rect x="1" y="1" width="38" height="38" rx="10" fill="oklch(0.2 0.01 60)" />
           <path d="M22.5 9.5 L13.5 21.5 H19 L17 30.5 L26.5 18.5 H21 L22.5 9.5 Z" fill="url(#logoGrad)" />
         </svg>
-        <span>© 2026 Elektrihind24 · Andmed: Elering / NordPool · KM 24% · reaalajas</span>
+        <span>© 2026 Elektrihind24 · Andmed: Nord Pool EE · KM 24% · reaalajas</span>
       </div>
       <div class="footer-links">
         <a href="#">Säästunipid</a>
@@ -571,10 +571,15 @@
   <script>
   /* ========== LIVE Elektrihind24 — Elering / Nord Pool ========== */
   const CONFIG = {
-    VAT: 1.24,
+    VAT: 1.24, // Eesti KM 24%
     CACHE_TTL_MS: 10 * 60 * 1000,
     FETCH_MS: 12000,
+    // spot-hinta.fi = Nord Pool EE, CORS lubatud (brauseris töötab)
+    SPOT_NOW: "https://api.spot-hinta.fi/JustNow?priceRegion=EE",
+    SPOT_TODAY: "https://api.spot-hinta.fi/TodayAndDayForward?priceRegion=EE",
+    SPOT_TODAY_ONLY: "https://api.spot-hinta.fi/Today?priceRegion=EE",
     ELERING: "https://dashboard.elering.ee/api/nps/price",
+    ELERING_CURRENT: "https://dashboard.elering.ee/api/nps/price/EE/current",
     WEATHER: "https://api.open-meteo.com/v1/forecast",
   };
 
@@ -607,6 +612,7 @@
     chartView: "today",
     gridView: "today",
     selectedAppliance: 0,
+    livePrice: null,
     neighbors: [
       { code: "EE", flag: "🇪🇪", price: 0, delta: 0 },
       { code: "FI", flag: "🇫🇮", price: 0, delta: 0 },
@@ -651,7 +657,7 @@
   function fetchTimeout(url, ms) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), ms);
-    return fetch(url, { signal: ctrl.signal, cache: "no-store" })
+    return fetch(url, { signal: ctrl.signal, cache: "no-store", mode: "cors" })
       .then((r) => {
         clearTimeout(t);
         if (!r.ok) throw new Error("HTTP " + r.status);
@@ -663,26 +669,44 @@
       });
   }
 
-  async function fetchJsonCors(url) {
-    const enc = encodeURIComponent(url);
-    const attempts = [
-      () => fetchTimeout(url, CONFIG.FETCH_MS),
-      () => fetchTimeout("https://corsproxy.io/?" + enc, CONFIG.FETCH_MS),
-      () =>
-        fetchTimeout("https://api.allorigins.win/raw?url=" + enc, CONFIG.FETCH_MS).then((j) =>
-          typeof j === "string" ? JSON.parse(j) : j
-        ),
-    ];
-    let last;
-    for (const fn of attempts) {
-      try {
-        const data = await fn();
-        if (data) return data;
-      } catch (e) {
-        last = e;
-      }
+  /** EUR/kWh (spot-hinta PriceNoTax) → s/kWh with EE VAT */
+  function eurKwhToSent(eurKwh) {
+    return Math.max(0, +(eurKwh * 100 * CONFIG.VAT).toFixed(2));
+  }
+
+  function parseSpotList(list) {
+    if (!Array.isArray(list) || !list.length) return { slots15: [], hours: [] };
+    const slots15 = list.map((row) => {
+      const d = new Date(row.DateTime);
+      return {
+        ts: Math.floor(d.getTime() / 1000),
+        price: eurKwhToSent(row.PriceNoTax),
+        dayKey: dayKeyLocal(d),
+        hour: d.getHours(),
+        minute: d.getMinutes(),
+      };
+    });
+    slots15.sort((a, b) => a.ts - b.ts);
+    // hourly averages for hero / grid / calc
+    const buckets = new Map();
+    for (const s of slots15) {
+      const key = s.dayKey + "|" + s.hour;
+      if (!buckets.has(key)) buckets.set(key, { sum: 0, n: 0, hour: s.hour, dayKey: s.dayKey, ts: s.ts });
+      const b = buckets.get(key);
+      b.sum += s.price;
+      b.n += 1;
+      b.ts = Math.min(b.ts, s.ts);
     }
-    throw last || new Error("fetch failed");
+    const hours = [...buckets.values()]
+      .map((b) => ({
+        hour: b.hour,
+        price: +(b.sum / b.n).toFixed(2),
+        dayKey: b.dayKey,
+        day: 0,
+        ts: b.ts,
+      }))
+      .sort((a, b) => a.ts - b.ts);
+    return { slots15, hours };
   }
 
   function toHourly(ee) {
@@ -734,7 +758,6 @@
     return out;
   }
 
-
   function splitDays(hours) {
     const now = new Date();
     const todayKey = dayKeyLocal(now);
@@ -743,7 +766,6 @@
     const tomKey = dayKeyLocal(tom);
     let today = hours.filter((h) => h.dayKey === todayKey).sort((a, b) => a.hour - b.hour);
     let tomorrow = hours.filter((h) => h.dayKey === tomKey).sort((a, b) => a.hour - b.hour);
-    // pad missing hours from sparse data
     function pad(rows, dayFlag) {
       const byH = new Map(rows.map((r) => [r.hour, r]));
       const out = [];
@@ -753,7 +775,13 @@
           const nearest = rows.reduce((a, b) =>
             Math.abs(a.hour - h) < Math.abs(b.hour - h) ? a : b
           );
-          out.push({ hour: h, price: nearest.price, day: dayFlag, dayKey: rows[0].dayKey, ts: nearest.ts });
+          out.push({
+            hour: h,
+            price: nearest.price,
+            day: dayFlag,
+            dayKey: rows[0].dayKey,
+            ts: nearest.ts,
+          });
         }
       }
       return out;
@@ -762,7 +790,6 @@
     if (tomorrow.length) tomorrow = pad(tomorrow, 1);
     return { today, tomorrow };
   }
-
 
   function eleringUrl() {
     const start = new Date();
@@ -780,9 +807,12 @@
     );
   }
 
-  function saveCache(hours, slots15) {
+  function saveCache(hours, slots15, livePrice) {
     try {
-      localStorage.setItem("e24_live", JSON.stringify({ hours, slots15, ts: Date.now() }));
+      localStorage.setItem(
+        "e24_live",
+        JSON.stringify({ hours, slots15, livePrice, ts: Date.now() })
+      );
     } catch (e) {}
   }
   function loadCache() {
@@ -793,40 +823,93 @@
     return null;
   }
 
+  /**
+   * Primary: spot-hinta.fi (CORS *, Nord Pool EE)
+   * Fallback: Elering (tihti CORS blokeeritud brauseris)
+   */
   async function loadPrices() {
-    setSourceLabel("Laadin Eleringist…");
+    setSourceLabel("Laadin Nord Pooli hindu…");
     const cached = loadCache();
-    if (cached) applyHours(cached.hours, "cache", cached.slots15);
+    if (cached) applyHours(cached.hours, "cache", cached.slots15, cached.livePrice);
 
     try {
-      const json = await fetchJsonCors(eleringUrl());
-      const ee = (json.data && json.data.ee) || [];
-      if (!ee.length) throw new Error("tühi");
-      const hours = toHourly(ee);
-      const slots15 = toSlots15(ee);
-      saveCache(hours, slots15);
-      applyHours(hours, "live", slots15);
-      if (json.data) {
-        updateNeighborsFromApi(json.data);
+      // 1) Full day series (15 min)
+      let list = null;
+      try {
+        list = await fetchTimeout(CONFIG.SPOT_TODAY, CONFIG.FETCH_MS);
+      } catch (e1) {
+        list = await fetchTimeout(CONFIG.SPOT_TODAY_ONLY, CONFIG.FETCH_MS);
       }
-    } catch (err) {
-      console.warn(err);
-      if (!state.today.length) {
-        if (cached) applyHours(cached.hours, "cache", cached.slots15);
-        else {
-          setSourceLabel("Andmeid ei õnnestunud laadida");
-          const viz = document.getElementById("price-chart");
-          if (viz)
-            viz.innerHTML =
-              '<text x="480" y="140" text-anchor="middle" fill="#5c6570" font-size="14">Andmeid ei õnnestunud laadida. Proovi ↻</text>';
+      const { slots15, hours } = parseSpotList(list);
+      if (!hours.length) throw new Error("tühi seeria");
+
+      // 2) Exact current slot
+      let livePrice = null;
+      try {
+        const now = await fetchTimeout(CONFIG.SPOT_NOW, 8000);
+        if (now && typeof now.PriceNoTax === "number") {
+          livePrice = eurKwhToSent(now.PriceNoTax);
         }
-      } else {
-        setSourceLabel(state.source === "live" ? "Reaalajas · Elering" : "Vahemälu · Elering");
+      } catch (e) {}
+
+      // If JustNow failed, pick closest 15-min slot by time
+      if (livePrice == null && slots15.length) {
+        const nowTs = Date.now() / 1000;
+        let best = slots15[0];
+        let bestDiff = Infinity;
+        for (const s of slots15) {
+          const d = Math.abs(s.ts - nowTs);
+          if (d < bestDiff) {
+            bestDiff = d;
+            best = s;
+          }
+        }
+        livePrice = best.price;
+      }
+
+      saveCache(hours, slots15, livePrice);
+      applyHours(hours, "live", slots15, livePrice);
+      setSourceLabel("Reaalajas · Nord Pool (EE)");
+    } catch (err) {
+      console.warn("spot-hinta failed", err);
+      // Fallback Elering (may fail in browser due to CORS)
+      try {
+        const json = await fetchTimeout(eleringUrl(), CONFIG.FETCH_MS);
+        const ee = (json.data && json.data.ee) || [];
+        if (!ee.length) throw new Error("elering tühi");
+        const hours = toHourly(ee);
+        const slots15 = toSlots15(ee);
+        let livePrice = null;
+        try {
+          const cur = await fetchTimeout(CONFIG.ELERING_CURRENT, 8000);
+          const row = cur.data && cur.data[0];
+          if (row) livePrice = eurMwhToSent(row.price);
+        } catch (e) {}
+        saveCache(hours, slots15, livePrice);
+        applyHours(hours, "live", slots15, livePrice);
+        if (json.data) updateNeighborsFromApi(json.data);
+        setSourceLabel("Reaalajas · Elering");
+      } catch (err2) {
+        console.warn("elering failed", err2);
+        if (!state.today.length) {
+          if (cached) {
+            applyHours(cached.hours, "cache", cached.slots15, cached.livePrice);
+            setSourceLabel("Vahemälu · viimane edukas päring");
+          } else {
+            setSourceLabel("Andmeid ei õnnestunud laadida");
+            const viz = document.getElementById("price-chart");
+            if (viz)
+              viz.innerHTML =
+                '<text x="480" y="140" text-anchor="middle" fill="#5c6570" font-size="14">Andmeid ei õnnestunud laadida. Proovi ↻</text>';
+          }
+        } else {
+          setSourceLabel("Vahemälu · Elering");
+        }
       }
     }
   }
 
-  function updateNeighborsFromApi(data) {
+    function updateNeighborsFromApi(data) {
     const zones = [
       { code: "EE", key: "ee" },
       { code: "FI", key: "fi" },
@@ -858,9 +941,10 @@
     renderNeighbors();
   }
 
-  function applyHours(hours, source, slots15) {
+  function applyHours(hours, source, slots15, livePrice) {
     state.allHours = hours;
     state.source = source;
+    state.livePrice = livePrice != null ? livePrice : null;
     state.currentHour = new Date().getHours();
     if (slots15) {
       state.slots15 = slots15;
@@ -919,8 +1003,13 @@
   function renderHero() {
     const today = state.today;
     const ch = state.currentHour;
-    const current = today[ch] || today[0];
-    const next = today[ch + 1] || state.tomorrow[0] || today[0];
+    const hourRow = today[ch] || today[0];
+    if (!hourRow) return;
+    // Reaalne hetkehind: JustNow / lähim 15 min, muidu tunni keskmine
+    const currentPrice =
+      state.livePrice != null ? state.livePrice : hourRow.price;
+    const current = { hour: hourRow.hour, price: currentPrice };
+    const next = today[ch + 1] || state.tomorrow[0] || hourRow;
     const avg = state.avg;
     const level = priceLevel(current.price, avg);
     const sorted = [...today].sort((a, b) => a.price - b.price);
