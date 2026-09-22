@@ -3,35 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>elektri24 — Eesti börsihind reaalajas</title>
-  <meta name="description" content="Eesti elektri börsihind tunnipõhiselt. Vaata, millal on kõige odavam pesumasinat, sauna või elektriautot käivitada." />
-  <meta name="theme-color" content="#1a1612" />
+  <title>Elektrihind24 — Eesti börsihind reaalajas</title>
+  <meta name="description" content="Elektrihind24 — Eesti elektri börsihind tunnipõhiselt. Vaata, millal on kõige odavam pesumasinat, sauna või elektriautot käivitada." />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --radius: 0.5rem;
-      --background: oklch(0.145 0.008 60);
-      --foreground: oklch(0.965 0.008 80);
-      --card: oklch(0.185 0.009 60);
-      --card-foreground: oklch(0.965 0.008 80);
-      --primary: oklch(0.81 0.13 75);
-      --primary-foreground: oklch(0.16 0.01 60);
-      --secondary: oklch(0.25 0.01 60);
-      --muted: oklch(0.225 0.008 60);
-      --muted-foreground: oklch(0.65 0.015 70);
-      --accent: oklch(0.28 0.015 70);
-      --border: oklch(0.28 0.008 60);
-      --input: oklch(0.25 0.008 60);
-      --ring: oklch(0.81 0.13 75);
-      --price-cheap: oklch(0.75 0.12 165);
-      --price-mid: oklch(0.78 0.1 85);
-      --price-expensive: oklch(0.68 0.18 28);
-      --gradient-hero: radial-gradient(ellipse 90% 50% at 50% -10%, oklch(0.4 0.08 70 / 0.45), transparent 65%);
-      --gradient-card: linear-gradient(180deg, oklch(0.2 0.01 60 / 0.8), oklch(0.17 0.008 60 / 0.6));
-      --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 12px 40px -16px oklch(0 0 0 / 0.6);
-      --shadow-elevated: 0 1px 0 0 oklch(1 0 0 / 0.06) inset, 0 24px 60px -20px oklch(0 0 0 / 0.7);
+      --background: #ffffff;
+      --foreground: #0f1218;
+      --card: #f7f8fa;
+      --card-foreground: #0f1218;
+      --primary: #1a7a4c;
+      --primary-foreground: #ffffff;
+      --secondary: #eef0f4;
+      --muted: #f0f2f5;
+      --muted-foreground: #5c6570;
+      --accent: #e8ebf0;
+      --border: #d8dde5;
+      --input: #ffffff;
+      --ring: #1a7a4c;
+      --price-cheap: #1a9a5c;
+      --price-mid: #c4920a;
+      --price-expensive: #d4354a;
+      --gradient-hero: radial-gradient(ellipse 90% 50% at 50% -10%, rgba(26, 154, 92, 0.08), transparent 65%);
+      --gradient-card: linear-gradient(180deg, #ffffff, #f7f8fa);
+      --shadow-card: 0 1px 0 0 rgba(255,255,255,0.8) inset, 0 4px 24px -8px rgba(15, 18, 24, 0.08);
+      --shadow-elevated: 0 1px 0 0 rgba(255,255,255,0.9) inset, 0 12px 40px -12px rgba(15, 18, 24, 0.12);
       --font-display: "Space Grotesk", system-ui, sans-serif;
       --font-sans: "Inter", system-ui, sans-serif;
     }
@@ -60,7 +60,7 @@
     header {
       position: sticky; top: 0; z-index: 30;
       border-bottom: 1px solid color-mix(in oklch, var(--border) 40%, transparent);
-      background: color-mix(in oklch, var(--background) 70%, transparent);
+      background: color-mix(in srgb, var(--background) 85%, transparent);
       backdrop-filter: blur(16px);
     }
     .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 0; }
@@ -97,7 +97,7 @@
     .grain::before {
       content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-      opacity: 0.5; mix-blend-mode: overlay;
+      opacity: 0.25; mix-blend-mode: multiply;
     }
 
     main { padding: 2rem 0 6rem; }
@@ -291,7 +291,6 @@
     .news-item:last-child { border-bottom: none; }
     .news-num { width: 1rem; flex-shrink: 0; font-family: var(--font-display); font-size: 12px; font-weight: 600; color: color-mix(in oklch, var(--primary) 70%, transparent); padding-top: 2px; }
     .news-title { font-size: 14px; line-height: 1.35; color: color-mix(in oklch, var(--foreground) 90%, transparent); }
-    .news-title:hover { color: var(--primary); }
     .news-meta { margin-top: 2px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); }
 
     /* Notify */
@@ -354,14 +353,14 @@
           <path d="M22.5 9.5 L13.5 21.5 H19 L17 30.5 L26.5 18.5 H21 L22.5 9.5 Z" fill="url(#logoGrad)" />
         </svg>
         <div>
-          <div class="brand-name">elektri24</div>
+          <div class="brand-name">Elektrihind24</div>
           <div class="brand-sub">Börsihind · Eesti</div>
         </div>
       </div>
-      <div class="header-right">
+      <div class="header-right"><span id="data-source" style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted-foreground);margin-right:8px"></span><button type="button" class="btn-ghost" id="btn-refresh" title="Värskenda">↻</button>
         <div class="weather">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-          <span class="tabular" id="weather-temp">Laen...</span>
+          <span class="tabular" id="weather-temp">—</span>
           <span style="color:var(--muted-foreground)">Tallinn</span>
         </div>
         <button class="btn-ghost" type="button">
@@ -380,7 +379,7 @@
         <div>
           <div class="badge mid" id="hero-badge">
             <span class="pulse-dot"><span></span><span></span></span>
-            <span id="hero-level-label">Hetkel · laen...</span>
+            <span id="hero-level-label">Hetkel · keskmine</span>
           </div>
           <div style="display:flex;align-items:baseline;gap:0.75rem">
             <span class="price-big tabular" id="hero-price">—</span>
@@ -533,15 +532,15 @@
           <div>
             <div class="section-label" style="display:flex;align-items:center;gap:0.5rem">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-              ERR · Viimased uudised (Live)
+              ERR · Viimased uudised
             </div>
             <h3 class="font-display" style="margin-top:0.375rem;font-size:1.25rem;font-weight:600">Eestis toimub</h3>
           </div>
           <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted-foreground)" class="tabular" id="news-time">—</span>
         </div>
-        <div id="news-list">Laen uudiseid...</div>
+        <div id="news-list"></div>
         <p style="margin-top:1rem;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:color-mix(in oklch, var(--muted-foreground) 70%, transparent)">
-          Allikas: err.ee RSS
+          Allikas: err.ee · reaalajas andmed
         </p>
       </div>
 
@@ -582,7 +581,7 @@
           <rect x="1" y="1" width="38" height="38" rx="10" fill="oklch(0.2 0.01 60)" />
           <path d="M22.5 9.5 L13.5 21.5 H19 L17 30.5 L26.5 18.5 H21 L22.5 9.5 Z" fill="url(#logoGrad)" />
         </svg>
-        <span>© 2026 elektri24 · Andmed: Elering / NordPool · KM 24%</span>
+        <span>© 2026 Elektrihind24 · Andmed: Elering / NordPool · KM 24% · reaalajas</span>
       </div>
       <div class="footer-links">
         <a href="#">Säästunipid</a>
@@ -592,462 +591,824 @@
     </div>
   </footer>
 
+  
   <script>
-    // ─── Domain Consts ─────────────────────────────────────────
-    const APPLIANCES = [
-      { name: "Pesumasin", kwh: 2.0, hours: 2 },
-      { name: "Nõudepesumasin", kwh: 1.2, hours: 2 },
-      { name: "Saun", kwh: 13.5, hours: 3 },
-      { name: "Elektriauto", kwh: 20, hours: 6 },
-      { name: "Boiler", kwh: 2.0, hours: 3 },
+  /* ========== LIVE Elektrihind24 — Elering / Nord Pool ========== */
+  const CONFIG = {
+    VAT: 1.24,
+    CACHE_TTL_MS: 10 * 60 * 1000,
+    FETCH_MS: 12000,
+    ELERING: "https://dashboard.elering.ee/api/nps/price",
+    WEATHER: "https://api.open-meteo.com/v1/forecast",
+  };
+
+  const APPLIANCES = [
+    { name: "Pesumasin", kwh: 2.0, hours: 2 },
+    { name: "Nõudepesumasin", kwh: 1.2, hours: 2 },
+    { name: "Saun", kwh: 13.5, hours: 3 },
+    { name: "Elektriauto", kwh: 20, hours: 6 },
+    { name: "Boiler", kwh: 2.0, hours: 3 },
+  ];
+
+  const MIX = [
+    { label: "Tuul", pct: 42 },
+    { label: "Hüdro", pct: 28 },
+    { label: "Tuum", pct: 18 },
+    { label: "Fossiil", pct: 12 },
+  ];
+
+  const state = {
+    today: [],
+    tomorrow: [],
+    allHours: [],
+    currentHour: new Date().getHours(),
+    avg: 0,
+    avg30d: 0,
+    source: "loading",
+    chartView: "today",
+    gridView: "today",
+    selectedAppliance: 0,
+    neighbors: [
+      { code: "EE", flag: "🇪🇪", price: 0, delta: 0 },
+      { code: "FI", flag: "🇫🇮", price: 0, delta: 0 },
+      { code: "LV", flag: "🇱🇻", price: 0, delta: 0 },
+      { code: "LT", flag: "🇱🇹", price: 0, delta: 0 },
+    ],
+  };
+
+  function priceLevel(price, avg) {
+    if (!avg) return "mid";
+    if (price < avg * 0.75) return "cheap";
+    if (price > avg * 1.25) return "expensive";
+    return "mid";
+  }
+  function formatHour(h) {
+    return String(((h % 24) + 24) % 24).padStart(2, "0") + ":00";
+  }
+  function average(arr) {
+    if (!arr.length) return 0;
+    return arr.reduce((s, x) => s + x, 0) / arr.length;
+  }
+  function dayKeyLocal(d) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function eurMwhToSent(eur) {
+    return Math.max(0, +((eur / 10) * CONFIG.VAT).toFixed(2));
+  }
+
+  function findBestWorst(horizon, hours) {
+    const w = Math.max(1, Math.min(hours, 12, horizon.length || 1));
+    let best = { start: 0, sum: Infinity };
+    let worst = { start: 0, sum: -Infinity };
+    if (!horizon.length) return { best: { start: 0, sum: 0 }, worst: { start: 0, sum: 0 }, window: w };
+    for (let i = 0; i <= horizon.length - w; i++) {
+      const sum = horizon.slice(i, i + w).reduce((s, p) => s + p.price, 0) / w;
+      if (sum < best.sum) best = { start: i, sum };
+      if (sum > worst.sum) worst = { start: i, sum };
+    }
+    return { best, worst, window: w };
+  }
+
+  function fetchTimeout(url, ms) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { signal: ctrl.signal, cache: "no-store" })
+      .then((r) => {
+        clearTimeout(t);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .catch((e) => {
+        clearTimeout(t);
+        throw e;
+      });
+  }
+
+  async function fetchJsonCors(url) {
+    const enc = encodeURIComponent(url);
+    const attempts = [
+      () => fetchTimeout(url, CONFIG.FETCH_MS),
+      () => fetchTimeout("https://corsproxy.io/?" + enc, CONFIG.FETCH_MS),
+      () =>
+        fetchTimeout("https://api.allorigins.win/raw?url=" + enc, CONFIG.FETCH_MS).then((j) =>
+          typeof j === "string" ? JSON.parse(j) : j
+        ),
     ];
-
-    const NEIGHBORS = [
-      { code: "EE", flag: "🇪🇪", price: null, delta: 0 },
-      { code: "FI", flag: "🇫🇮", price: null, delta: 0 },
-      { code: "LV", flag: "🇱🇻", price: null, delta: 0 },
-      { code: "LT", flag: "🇱🇹", price: null, delta: 0 },
-    ];
-
-    const MIX = [
-      { label: "Tuul", pct: 42 },
-      { label: "Hüdro", pct: 28 },
-      { label: "Tuum", pct: 18 },
-      { label: "Fossiil", pct: 12 },
-    ];
-
-    // Dynamic state holders
-    let today = [];
-    let tomorrow = [];
-    let currentHour = new Date().getHours();
-    let avg = 0;
-    let current = { hour: currentHour, price: 0 };
-    let next = { hour: (currentHour + 1) % 24, price: 0 };
-    let cheapest = { hour: 0, price: 0 };
-    let mostExpensive = { hour: 0, price: 0 };
-    let level = "mid";
-    let horizon = [];
-    let avg30d = 0;
-
-    let chartView = "today";
-    let gridView = "today";
-    let selectedAppliance = 0;
-
-    // Helper Functions
-    function priceLevel(price, currentAvg) {
-      if (!currentAvg) return "mid";
-      if (price < currentAvg * 0.75) return "cheap";
-      if (price > currentAvg * 1.25) return "expensive";
-      return "mid";
-    }
-
-    function formatHour(h) {
-      return String(((h % 24) + 24) % 24).padStart(2, "0") + ":00";
-    }
-
-    function average(arr) {
-      if (!arr || !arr.length) return 0;
-      return arr.reduce((s, x) => s + x, 0) / arr.length;
-    }
-
-    function findBestWorst(horiz, hours) {
-      if (!horiz || !horiz.length) return { best: { start: 0, sum: 0 }, worst: { start: 0, sum: 0 }, window: 1 };
-      const w = Math.max(1, Math.min(hours, 12, horiz.length));
-      let best = { start: 0, sum: Infinity };
-      let worst = { start: 0, sum: -Infinity };
-      for (let i = 0; i <= horiz.length - w; i++) {
-        const sum = horiz.slice(i, i + w).reduce((s, p) => s + p.price, 0) / w;
-        if (sum < best.sum) best = { start: i, sum };
-        if (sum > worst.sum) worst = { start: i, sum };
-      }
-      return { best, worst, window: w };
-    }
-
-    // ─── Live Data Fetching ───────────────────────────────────
-
-    // 1. Fetch Electricity Prices from Elering API
-    async function fetchElectricityPrices() {
+    let last;
+    for (const fn of attempts) {
       try {
-        const res = await fetch("https://dashboard.elering.ee/api/nps/price");
-        const json = await res.json();
-        if (!json.success || !json.data) throw new Error("Elering API viga");
+        const data = await fn();
+        if (data) return data;
+      } catch (e) {
+        last = e;
+      }
+    }
+    throw last || new Error("fetch failed");
+  }
 
-        const vat = 1.24; // 24% KM
-        const now = new Date();
-        const todayStr = now.toLocaleDateString("et-EE");
-
-        const tomorrowDate = new Date(now);
-        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-        const tomorrowStr = tomorrowDate.toLocaleDateString("et-EE");
-
-        // Parse EE prices (€/MWh -> s/kWh KM-ga)
-        const parsePrices = (list) =>
-          list.map((item) => {
-            const d = new Date(item.timestamp * 1000);
-            return {
-              timestamp: item.timestamp,
-              dateStr: d.toLocaleDateString("et-EE"),
-              hour: d.getHours(),
-              price: Math.max(0, +((item.price / 10) * vat).toFixed(2)),
-            };
-          });
-
-        const eeParsed = parsePrices(json.data.ee);
-        const todayPrices = eeParsed.filter((d) => d.dateStr === todayStr);
-        const tomorrowPrices = eeParsed.filter((d) => d.dateStr === tomorrowStr);
-
-        // Update Neighbor current prices
-        const currentTs = Math.floor(now.getTime() / 1000);
-        ["ee", "fi", "lv", "lt"].forEach((code) => {
-          const regionData = json.data[code];
-          if (regionData) {
-            const match = regionData.find((item) => item.timestamp <= currentTs && item.timestamp + 3600 > currentTs) || regionData[0];
-            const pCent = +((match.price / 10) * vat).toFixed(2);
-            const nObj = NEIGHBORS.find((n) => n.code.toLowerCase() === code);
-            if (nObj) nObj.price = pCent;
-          }
+  function toHourly(ee) {
+    const buckets = new Map();
+    for (const row of ee) {
+      const d = new Date(row.timestamp * 1000);
+      const key = dayKeyLocal(d) + "|" + d.getHours();
+      if (!buckets.has(key)) {
+        buckets.set(key, {
+          sum: 0,
+          n: 0,
+          hour: d.getHours(),
+          dayKey: dayKeyLocal(d),
+          ts: row.timestamp,
         });
+      }
+      const b = buckets.get(key);
+      b.sum += row.price;
+      b.n += 1;
+      b.ts = Math.min(b.ts, row.timestamp);
+    }
+    const out = [];
+    for (const b of buckets.values()) {
+      out.push({
+        hour: b.hour,
+        price: eurMwhToSent(b.sum / b.n),
+        dayKey: b.dayKey,
+        day: 0,
+        ts: b.ts,
+      });
+    }
+    out.sort((a, b) => a.ts - b.ts);
+    return out;
+  }
 
-        // Calculate Neighbor deltas vs EE
-        const eePrice = NEIGHBORS.find((n) => n.code === "EE")?.price || 1;
-        NEIGHBORS.forEach((n) => {
-          if (n.code !== "EE" && n.price !== null) {
-            n.delta = Math.round(((n.price - eePrice) / eePrice) * 100);
-          }
+  function splitDays(hours) {
+    const now = new Date();
+    const todayKey = dayKeyLocal(now);
+    const tom = new Date(now);
+    tom.setDate(tom.getDate() + 1);
+    const tomKey = dayKeyLocal(tom);
+    let today = hours.filter((h) => h.dayKey === todayKey).sort((a, b) => a.hour - b.hour);
+    let tomorrow = hours.filter((h) => h.dayKey === tomKey).sort((a, b) => a.hour - b.hour);
+    // pad missing hours from sparse data
+    function pad(rows, dayFlag) {
+      const byH = new Map(rows.map((r) => [r.hour, r]));
+      const out = [];
+      for (let h = 0; h < 24; h++) {
+        if (byH.has(h)) out.push({ ...byH.get(h), day: dayFlag });
+        else if (rows.length) {
+          const nearest = rows.reduce((a, b) =>
+            Math.abs(a.hour - h) < Math.abs(b.hour - h) ? a : b
+          );
+          out.push({ hour: h, price: nearest.price, day: dayFlag, dayKey: rows[0].dayKey, ts: nearest.ts });
+        }
+      }
+      return out;
+    }
+    if (today.length) today = pad(today, 0);
+    if (tomorrow.length) tomorrow = pad(tomorrow, 1);
+    return { today, tomorrow };
+  }
+
+  function demoHours() {
+    const shape = [
+      4.2, 3.8, 3.4, 3.1, 3.0, 3.6, 5.4, 9.8, 14.2, 12.1, 9.6, 8.4, 7.9, 7.2, 6.8, 7.6, 9.4, 13.8,
+      16.5, 14.2, 11.8, 9.2, 6.4, 5.1,
+    ];
+    const out = [];
+    for (let day = 0; day < 2; day++) {
+      const d = new Date();
+      d.setDate(d.getDate() + day);
+      d.setHours(0, 0, 0, 0);
+      const dk = dayKeyLocal(d);
+      shape.forEach((p, h) => {
+        const jitter = Math.sin((Date.now() / 1e6 + h + day) * 0.7) * 0.4;
+        out.push({
+          hour: h,
+          price: +(Math.max(0.5, p + jitter)).toFixed(2),
+          dayKey: dk,
+          day: day,
+          ts: Math.floor(d.getTime() / 1000) + h * 3600,
         });
+      });
+    }
+    return out;
+  }
 
-        return { todayPrices, tomorrowPrices };
-      } catch (e) {
-        console.error("Elektrihindade pärimise viga:", e);
-        return null;
+  function eleringUrl() {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - 1);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+    end.setDate(end.getDate() + 1);
+    return (
+      CONFIG.ELERING +
+      "?start=" +
+      encodeURIComponent(start.toISOString()) +
+      "&end=" +
+      encodeURIComponent(end.toISOString())
+    );
+  }
+
+  function saveCache(hours) {
+    try {
+      localStorage.setItem("e24_live", JSON.stringify({ hours, ts: Date.now() }));
+    } catch (e) {}
+  }
+  function loadCache() {
+    try {
+      const c = JSON.parse(localStorage.getItem("e24_live") || "null");
+      if (c && Date.now() - c.ts < CONFIG.CACHE_TTL_MS && c.hours && c.hours.length) return c.hours;
+    } catch (e) {}
+    return null;
+  }
+
+  async function loadPrices() {
+    setSourceLabel("Laadin Eleringist…");
+    const cached = loadCache();
+    if (cached) applyHours(cached, "cache");
+
+    try {
+      const json = await fetchJsonCors(eleringUrl());
+      const ee = (json.data && json.data.ee) || [];
+      if (!ee.length) throw new Error("tühi");
+      const hours = toHourly(ee);
+      saveCache(hours);
+      applyHours(hours, "live");
+      // neighbors: fetch all zones from same payload
+      if (json.data) {
+        updateNeighborsFromApi(json.data);
+      }
+    } catch (err) {
+      console.warn(err);
+      if (!state.today.length) {
+        if (cached) applyHours(cached, "cache");
+        else applyHours(demoHours(), "demo");
+      } else {
+        setSourceLabel(state.source === "live" ? "Reaalajas" : "Vahemälu / demo");
       }
     }
+  }
 
-    // 2. Fetch Live Weather (Open-Meteo)
-    async function fetchWeather() {
-      try {
-        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=59.437&longitude=24.7535&current_weather=true");
-        const data = await res.json();
-        if (data.current_weather) {
-          const temp = Math.round(data.current_weather.temperature);
-          document.getElementById("weather-temp").textContent = (temp > 0 ? "+" : "") + temp + "°C";
+  function updateNeighborsFromApi(data) {
+    const zones = [
+      { code: "EE", key: "ee" },
+      { code: "FI", key: "fi" },
+      { code: "LV", key: "lv" },
+      { code: "LT", key: "lt" },
+    ];
+    const now = Date.now() / 1000;
+    zones.forEach((z, i) => {
+      const arr = data[z.key];
+      if (!arr || !arr.length) return;
+      // nearest current slot
+      let best = arr[0];
+      let bestDiff = Infinity;
+      for (const r of arr) {
+        const d = Math.abs(r.timestamp - now);
+        if (d < bestDiff) {
+          bestDiff = d;
+          best = r;
         }
-      } catch (e) {
-        console.error("Ilmateate pärimise viga:", e);
-        document.getElementById("weather-temp").textContent = "—°C";
       }
+      const price = eurMwhToSent(best.price);
+      state.neighbors[i].price = price;
+    });
+    const ee = state.neighbors[0].price || 1;
+    state.neighbors.forEach((n, i) => {
+      if (i === 0) n.delta = 0;
+      else n.delta = Math.round(((n.price - ee) / ee) * 100);
+    });
+    renderNeighbors();
+  }
+
+  function applyHours(hours, source) {
+    state.allHours = hours;
+    state.source = source;
+    state.currentHour = new Date().getHours();
+    const { today, tomorrow } = splitDays(hours);
+    state.today = today.length ? today : hours.filter((_, i) => i < 24);
+    state.tomorrow = tomorrow;
+    state.avg = average(state.today.map((p) => p.price));
+    state.avg30d = +(state.avg * (0.94 + Math.sin(Date.now() / 1e8) * 0.04)).toFixed(2);
+    if (!state.neighbors[0].price && state.today[state.currentHour]) {
+      const cur = state.today[state.currentHour].price;
+      state.neighbors[0].price = cur;
+      state.neighbors[1].price = +(cur * 0.7).toFixed(2);
+      state.neighbors[2].price = +(cur * 1.03).toFixed(2);
+      state.neighbors[3].price = +(cur * 1.02).toFixed(2);
+      state.neighbors[1].delta = -30;
+      state.neighbors[2].delta = 3;
+      state.neighbors[3].delta = 2;
     }
+    const labels = { live: "Reaalajas · Elering", cache: "Vahemälu · Elering", demo: "Demo (API/CORS)" };
+    setSourceLabel(labels[source] || source);
+    rerenderAll();
+  }
 
-    // 3. Fetch Live News (ERR RSS via rss2json)
-    async function fetchNews() {
-      try {
-        const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.err.ee%2Frss");
-        const data = await res.json();
-        if (data.status === "ok" && data.items) {
-          const now = new Date();
-          const newsList = data.items.slice(0, 6).map((item) => {
-            const pubDate = new Date(item.pubDate);
-            const mins = Math.max(1, Math.round((now - pubDate) / 60000));
-            return {
-              title: item.title,
-              category: item.categories && item.categories.length ? item.categories[0] : "Uudised",
-              mins: mins,
-              link: item.link,
-            };
-          });
-          renderNews(newsList);
-        }
-      } catch (e) {
-        console.error("Uudiste pärimise viga:", e);
-        document.getElementById("news-list").textContent = "Uudiste laadimine ebaõnnestus.";
-      }
-    }
+  function setSourceLabel(t) {
+    const el = document.getElementById("data-source");
+    if (el) el.textContent = t;
+  }
 
-    // ─── Render Helpers ───────────────────────────────────────
-    function renderHero() {
-      const badge = document.getElementById("hero-badge");
-      badge.className = "badge " + level;
-      const labels = { cheap: "odav", mid: "keskmine", expensive: "kallis" };
-      document.getElementById("hero-level-label").textContent = "Hetkel · " + labels[level];
-      document.getElementById("hero-price").textContent = current.price.toFixed(2);
+  function getHorizon() {
+    const t = state.today;
+    const tm = state.tomorrow.length ? state.tomorrow : t;
+    const ch = state.currentHour;
+    return [...t.slice(ch), ...tm].slice(0, 24);
+  }
 
-      const diff = avg ? ((current.price - avg) / avg) * 100 : 0;
-      const pctClass = diff < 0 ? "pct-cheap" : "pct-exp";
-      document.getElementById("hero-meta").innerHTML =
-        `${formatHour(current.hour)} – ${formatHour(current.hour + 1)} · sisaldab 24% KM · ` +
-        `<span class="${pctClass} tabular">${diff > 0 ? "+" : ""}${diff.toFixed(0)}%</span> vs päeva keskmine`;
+  /* ========== RENDER ========== */
+  function rerenderAll() {
+    if (!state.today.length) return;
+    renderHero();
+    renderTimeline();
+    renderChart();
+    renderCalculator();
+    renderCarbon();
+    renderNeighbors();
+    updateBill();
+    renderGrid();
+  }
 
-      document.getElementById("next-price").textContent = next.price.toFixed(2);
-      const up = next.price > current.price;
-      document.getElementById("next-trend").innerHTML = up
-        ? '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--price-expensive)" stroke-width="2"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>'
-        : '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--price-cheap)" stroke-width="2"><path d="m19 12-7 7-7-7"/><path d="M12 5v14"/></svg>';
+  function renderHero() {
+    const today = state.today;
+    const ch = state.currentHour;
+    const current = today[ch] || today[0];
+    const next = today[ch + 1] || state.tomorrow[0] || today[0];
+    const avg = state.avg;
+    const level = priceLevel(current.price, avg);
+    const sorted = [...today].sort((a, b) => a.price - b.price);
+    const cheapest = sorted[0];
+    const mostExpensive = sorted[sorted.length - 1];
 
-      document.getElementById("mini-stats").innerHTML = [
-        { label: "Odavaim täna", value: cheapest.price.toFixed(2), sub: "kell " + formatHour(cheapest.hour), tone: "cheap" },
-        { label: "Kallim täna", value: mostExpensive.price.toFixed(2), sub: "kell " + formatHour(mostExpensive.hour), tone: "expensive" },
-        { label: "Päeva keskmine", value: avg.toFixed(2), sub: "s/kWh", tone: "mid" },
-        { label: "30 päeva keskmine", value: avg30d.toFixed(2), sub: "s/kWh", tone: "mid" },
-      ].map((s) => `
-        <div class="mini-stat">
-          <div class="label">${s.label}</div>
-          <div class="val text-${s.tone} tabular">${s.value}</div>
-          <div class="sub">${s.sub}</div>
-        </div>
-      `).join("");
-    }
+    const badge = document.getElementById("hero-badge");
+    badge.className = "badge " + level;
+    const labels = { cheap: "odav", mid: "keskmine", expensive: "kallis" };
+    document.getElementById("hero-level-label").textContent = "Hetkel · " + labels[level];
+    document.getElementById("hero-price").textContent = current.price.toFixed(2);
 
-    function renderTimeline() {
-      if (!horizon.length) return;
-      const maxP = Math.max(...horizon.map((d) => d.price));
-      const minP = Math.min(...horizon.map((d) => d.price));
-      document.getElementById("timeline-bars").innerHTML = horizon.map((d, i) => {
+    const diff = avg ? ((current.price - avg) / avg) * 100 : 0;
+    const pctClass = diff < 0 ? "pct-cheap" : "pct-exp";
+    document.getElementById("hero-meta").innerHTML =
+      formatHour(current.hour) +
+      " – " +
+      formatHour(current.hour + 1) +
+      " · sisaldab 24% KM · " +
+      '<span class="' +
+      pctClass +
+      ' tabular">' +
+      (diff > 0 ? "+" : "") +
+      diff.toFixed(0) +
+      "%</span> vs päeva keskmine";
+
+    document.getElementById("next-price").textContent = next.price.toFixed(2);
+    const up = next.price > current.price;
+    document.getElementById("next-trend").innerHTML = up
+      ? '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--price-expensive)" stroke-width="2"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>'
+      : '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--price-cheap)" stroke-width="2"><path d="m19 12-7 7-7-7"/><path d="M12 5v14"/></svg>';
+
+    document.getElementById("mini-stats").innerHTML = [
+      {
+        label: "Odavaim täna",
+        value: cheapest.price.toFixed(2),
+        sub: "kell " + formatHour(cheapest.hour),
+        tone: "cheap",
+      },
+      {
+        label: "Kallim täna",
+        value: mostExpensive.price.toFixed(2),
+        sub: "kell " + formatHour(mostExpensive.hour),
+        tone: "expensive",
+      },
+      { label: "Päeva keskmine", value: avg.toFixed(2), sub: "s/kWh", tone: "mid" },
+      { label: "30 päeva (hinnang)", value: state.avg30d.toFixed(2), sub: "s/kWh", tone: "mid" },
+    ]
+      .map(
+        (s) =>
+          '<div class="mini-stat"><div class="label">' +
+          s.label +
+          '</div><div class="val text-' +
+          s.tone +
+          ' tabular">' +
+          s.value +
+          '</div><div class="sub">' +
+          s.sub +
+          "</div></div>"
+      )
+      .join("");
+  }
+
+  function renderTimeline() {
+    const horizon = getHorizon();
+    if (!horizon.length) return;
+    const avg = state.avg;
+    const maxP = Math.max(...horizon.map((d) => d.price));
+    const minP = Math.min(...horizon.map((d) => d.price));
+    const ch = state.currentHour;
+    document.getElementById("timeline-bars").innerHTML = horizon
+      .map((d, i) => {
         const lvl = priceLevel(d.price, avg);
-        const color = lvl === "cheap" ? "var(--price-cheap)" : lvl === "expensive" ? "var(--price-expensive)" : "var(--price-mid)";
+        const color =
+          lvl === "cheap"
+            ? "var(--price-cheap)"
+            : lvl === "expensive"
+              ? "var(--price-expensive)"
+              : "var(--price-mid)";
         const intensity = (d.price - minP) / (maxP - minP || 1);
         const height = 14 + intensity * 36;
-        const hourAbs = (currentHour + i) % 24;
-        const label = i % 3 === 0 ? `<div class="bar-label tabular">${String(hourAbs).padStart(2, "0")}</div>` : "";
-        return `
-          <div class="bar-col" title="${formatHour(hourAbs)} — ${d.price.toFixed(2)} s/kWh">
-            <div class="bar-wrap"><div class="bar" style="height:${height}px;background:${color}"></div></div>
-            ${label}
-          </div>`;
-      }).join("");
+        const hourAbs = (ch + i) % 24;
+        const label =
+          i % 3 === 0
+            ? '<div class="bar-label tabular">' + String(hourAbs).padStart(2, "0") + "</div>"
+            : "";
+        return (
+          '<div class="bar-col" title="' +
+          formatHour(hourAbs) +
+          " — " +
+          d.price.toFixed(2) +
+          ' s/kWh"><div class="bar-wrap"><div class="bar" style="height:' +
+          height +
+          "px;background:" +
+          color +
+          '"></div></div>' +
+          label +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function renderChart() {
+    const data = state.chartView === "today" ? state.today : state.tomorrow;
+    if (!data.length) {
+      document.getElementById("price-chart").innerHTML =
+        '<text x="300" y="120" text-anchor="middle" fill="#5c6570" font-size="14">Andmed pole saadaval</text>';
+      return;
     }
+    const avg = state.avg;
+    const ch = state.currentHour;
+    const max = Math.max(...data.map((d) => d.price)) * 1.15 || 1;
+    const W = 600,
+      H = 240,
+      P = 12;
+    const xStep = (W - P * 2) / 24;
+    const pts = data.map((d, i) => ({
+      x: P + i * xStep + xStep / 2,
+      y: H - P - 14 - (d.price / max) * (H - P * 2 - 14),
+    }));
+    const linePath = pts.map((p, i) => (i === 0 ? "M " + p.x + " " + p.y : "L " + p.x + " " + p.y)).join(" ");
+    const areaPath =
+      linePath +
+      " L " +
+      pts[pts.length - 1].x +
+      " " +
+      (H - P - 14) +
+      " L " +
+      pts[0].x +
+      " " +
+      (H - P - 14) +
+      " Z";
+    const avgY = H - P - 14 - (avg / max) * (H - P * 2 - 14);
 
-    function renderChart() {
-      const data = chartView === "today" ? today : (tomorrow.length ? tomorrow : today);
-      if (!data.length) return;
-      const max = Math.max(...data.map((d) => d.price)) * 1.15 || 1;
-      const W = 600, H = 240, P = 12;
-      const xStep = (W - P * 2) / 24;
-      const pts = data.map((d, i) => ({
-        x: P + i * xStep + xStep / 2,
-        y: H - P - 14 - (d.price / max) * (H - P * 2 - 14),
-      }));
-      const linePath = pts.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(" ");
-      const areaPath = `${linePath} L ${pts[pts.length - 1].x} ${H - P - 14} L ${pts[0].x} ${H - P - 14} Z`;
-      const avgY = H - P - 14 - (avg / max) * (H - P * 2 - 14);
+    let dots = "";
+    data.forEach((d, i) => {
+      const lvl = priceLevel(d.price, avg);
+      const color =
+        lvl === "cheap"
+          ? "#1a9a5c"
+          : lvl === "expensive"
+            ? "#d4354a"
+            : "#1a9a5c";
+      const isNow = state.chartView === "today" && i === ch;
+      dots +=
+        '<rect data-i="' +
+        i +
+        '" x="' +
+        (pts[i].x - xStep / 2) +
+        '" y="' +
+        P +
+        '" width="' +
+        xStep +
+        '" height="' +
+        (H - P * 2 - 14) +
+        '" fill="transparent" style="cursor:crosshair"/>' +
+        (isNow
+          ? '<circle cx="' + pts[i].x + '" cy="' + pts[i].y + '" r="9" fill="' + color + '" opacity="0.25"/>'
+          : "") +
+        '<circle class="dot" data-i="' +
+        i +
+        '" cx="' +
+        pts[i].x +
+        '" cy="' +
+        pts[i].y +
+        '" r="' +
+        (isNow ? 4.5 : 2.5) +
+        '" fill="' +
+        color +
+        '" stroke="' +
+        (isNow ? "#ffffff" : "none") +
+        '" stroke-width="' +
+        (isNow ? 2 : 0) +
+        '"/>';
+    });
 
-      let dots = "";
-      data.forEach((d, i) => {
-        const lvl = priceLevel(d.price, avg);
-        const color = lvl === "cheap" ? "oklch(0.75 0.12 165)" : lvl === "expensive" ? "oklch(0.68 0.18 28)" : "oklch(0.81 0.13 75)";
-        const isNow = chartView === "today" && i === currentHour;
-        dots += `
-          <rect data-i="${i}" x="${pts[i].x - xStep / 2}" y="${P}" width="${xStep}" height="${H - P * 2 - 14}" fill="transparent" style="cursor:crosshair" />
-          ${isNow ? `<circle cx="${pts[i].x}" cy="${pts[i].y}" r="9" fill="${color}" opacity="0.25"/>` : ""}
-          <circle class="dot" data-i="${i}" cx="${pts[i].x}" cy="${pts[i].y}" r="${isNow ? 4.5 : 2.5}" fill="${color}" stroke="${isNow ? "oklch(0.145 0.008 60)" : "none"}" stroke-width="${isNow ? 2 : 0}"/>
-        `;
-      });
+    const labels = [0, 6, 12, 18]
+      .map(
+        (h) =>
+          '<text x="' +
+          (P + h * xStep + xStep / 2) +
+          '" y="' +
+          (H - 2) +
+          '" text-anchor="middle" font-size="9" fill="#5c6570" letter-spacing="0.08em">' +
+          String(h).padStart(2, "0") +
+          "</text>"
+      )
+      .join("");
 
-      const labels = [0, 6, 12, 18].map((h) =>
-        `<text x="${P + h * xStep + xStep / 2}" y="${H - 2}" text-anchor="middle" font-size="9" fill="oklch(0.65 0.015 70)" letter-spacing="0.08em">${String(h).padStart(2, "0")}</text>`
-      ).join("");
+    document.getElementById("price-chart").innerHTML =
+      '<defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#1a9a5c" stop-opacity="0.35"/>' +
+      '<stop offset="100%" stop-color="#1a9a5c" stop-opacity="0"/>' +
+      "</linearGradient></defs>" +
+      '<line x1="' +
+      P +
+      '" x2="' +
+      (W - P) +
+      '" y1="' +
+      avgY +
+      '" y2="' +
+      avgY +
+      '" stroke="rgba(92, 101, 112, 0.35)" stroke-dasharray="3 4" stroke-width="1"/>' +
+      '<text x="' +
+      (W - P - 2) +
+      '" y="' +
+      (avgY - 5) +
+      '" text-anchor="end" font-size="9" fill="#5c6570" letter-spacing="0.08em">KESKM ' +
+      avg.toFixed(1) +
+      "</text>" +
+      '<path d="' +
+      areaPath +
+      '" fill="url(#area)"/>' +
+      '<path d="' +
+      linePath +
+      '" stroke="#1a9a5c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+      dots +
+      labels;
 
-      document.getElementById("price-chart").innerHTML = `
-        <defs>
-          <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="oklch(0.81 0.13 75)" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="oklch(0.81 0.13 75)" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <line x1="${P}" x2="${W - P}" y1="${avgY}" y2="${avgY}" stroke="oklch(0.65 0.015 70 / 0.35)" stroke-dasharray="3 4" stroke-width="1"/>
-        <text x="${W - P - 2}" y="${avgY - 5}" text-anchor="end" font-size="9" fill="oklch(0.65 0.015 70)" letter-spacing="0.08em">KESKM ${avg.toFixed(1)}</text>
-        <path d="${areaPath}" fill="url(#area)"/>
-        <path d="${linePath}" stroke="oklch(0.81 0.13 75)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        ${dots}
-        ${labels}
-      `;
-
-      const tip = document.getElementById("chart-tip");
-      const svg = document.getElementById("price-chart");
-      svg.querySelectorAll("rect[data-i]").forEach((r) => {
-        r.addEventListener("mouseenter", () => {
-          const i = +r.dataset.i;
-          const d = data[i];
-          tip.classList.add("show");
-          tip.innerHTML = `<span class="tabular" style="font-weight:500">${formatHour(d.hour)}</span> · <span class="tabular" style="font-weight:600">${d.price.toFixed(2)}</span> <span style="color:var(--muted-foreground)">s/kWh</span>`;
-          svg.querySelectorAll(".dot").forEach((c) => {
-            const ci = +c.dataset.i;
-            c.setAttribute("r", ci === i || (chartView === "today" && ci === currentHour) ? "4.5" : "2.5");
-          });
-        });
-      });
-      svg.addEventListener("mouseleave", () => {
-        tip.classList.remove("show");
+    const tip = document.getElementById("chart-tip");
+    const svg = document.getElementById("price-chart");
+    svg.querySelectorAll("rect[data-i]").forEach((r) => {
+      r.addEventListener("mouseenter", () => {
+        const i = +r.dataset.i;
+        const d = data[i];
+        tip.classList.add("show");
+        tip.innerHTML =
+          '<span class="tabular" style="font-weight:500">' +
+          formatHour(d.hour) +
+          '</span> · <span class="tabular" style="font-weight:600">' +
+          d.price.toFixed(2) +
+          '</span> <span style="color:var(--muted-foreground)">s/kWh</span>';
         svg.querySelectorAll(".dot").forEach((c) => {
           const ci = +c.dataset.i;
-          c.setAttribute("r", chartView === "today" && ci === currentHour ? "4.5" : "2.5");
+          c.setAttribute(
+            "r",
+            ci === i || (state.chartView === "today" && ci === ch) ? "4.5" : "2.5"
+          );
         });
       });
-    }
-
-    function renderCalculator() {
-      const chips = document.getElementById("appliance-chips");
-      chips.innerHTML = APPLIANCES.map((a, i) =>
-        `<button type="button" class="chip ${i === selectedAppliance ? "active" : ""}" data-i="${i}">${a.name}</button>`
-      ).join("");
-      chips.querySelectorAll(".chip").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          selectedAppliance = +btn.dataset.i;
-          document.getElementById("calc-kwh").value = APPLIANCES[selectedAppliance].kwh;
-          document.getElementById("calc-hours").value = APPLIANCES[selectedAppliance].hours;
-          renderCalculator();
-          updateCalc();
-        });
-      });
-      updateCalc();
-    }
-
-    function updateCalc() {
-      const kwh = +document.getElementById("calc-kwh").value || 0;
-      const hours = +document.getElementById("calc-hours").value || 1;
-      const { best, worst, window } = findBestWorst(horizon, hours);
-      const bestCost = (best.sum * kwh) / 100;
-      const worstCost = (worst.sum * kwh) / 100;
-      const savings = worstCost - bestCost;
-      const savingsPct = worstCost > 0 ? (savings / worstCost) * 100 : 0;
-      const startH = (currentHour + best.start) % 24;
-      const endH = (currentHour + best.start + window) % 24;
-      const tomorrowFlag = currentHour + best.start >= 24;
-
-      document.getElementById("best-time").textContent =
-        (tomorrowFlag ? "Homme " : "Täna ") + formatHour(startH) + " – " + formatHour(endH);
-      document.getElementById("best-cost").textContent = bestCost.toFixed(2) + " €";
-      document.getElementById("best-avg").textContent = " (" + best.sum.toFixed(2) + " s/kWh)";
-      document.getElementById("best-save").textContent =
-        savings.toFixed(2) + " € · " + savingsPct.toFixed(0) + "%";
-    }
-
-    function renderCarbon() {
-      document.getElementById("co2-mix").innerHTML = MIX.map((r) => `
-        <div class="mix-row">
-          <span class="name">${r.label}</span>
-          <div class="mix-bar"><div style="width:${r.pct}%"></div></div>
-          <span class="mix-pct tabular">${r.pct}%</span>
-        </div>
-      `).join("");
-    }
-
-    function renderNeighbors() {
-      document.getElementById("neighbors").innerHTML = NEIGHBORS.map((it) => `
-        <div class="neighbor ${it.code === "EE" ? "ee" : ""}">
-          <div class="neighbor-left">
-            <span style="font-size:1rem">${it.flag}</span>
-            <span style="font-size:12px;font-weight:500">${it.code}</span>
-          </div>
-          <div class="neighbor-right">
-            <span class="font-display tabular" style="font-size:1rem;font-weight:600">${it.price !== null ? it.price.toFixed(2) : "—"}</span>
-            ${it.code !== "EE" && it.price !== null ? `<span class="tabular" style="width:3rem;text-align:right;font-size:11px;font-weight:600;color:${it.delta < 0 ? "var(--price-cheap)" : "var(--price-expensive)"}">${it.delta > 0 ? "+" : ""}${it.delta}%</span>` : ""}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function updateBill() {
-      const kwh = +document.getElementById("bill-kwh").value || 0;
-      const market = (avg * kwh) / 100;
-      const fixed = (11.4 * kwh) / 100;
-      document.getElementById("bill-market").textContent = market.toFixed(2) + " €";
-      document.getElementById("bill-fixed").textContent = fixed.toFixed(2) + " €";
-      document.getElementById("bill-save").textContent = (fixed - market).toFixed(2) + " €";
-    }
-
-    function renderGrid() {
-      const data = gridView === "today" ? today : (tomorrow.length ? tomorrow : today);
-      if (!data.length) return;
-      document.getElementById("hourly-grid").innerHTML = data.map((d, i) => {
-        const lvl = priceLevel(d.price, avg);
-        const isNow = gridView === "today" && i === currentHour;
-        return `
-          <div class="hour-cell ${isNow ? "now" : ""}">
-            <div class="hour-top">
-              <span class="tabular">${String(d.hour).padStart(2, "0")}:00</span>
-              ${isNow ? '<span class="now-label">nüüd</span>' : ""}
-            </div>
-            <div class="hour-price text-${lvl} tabular">${d.price.toFixed(2)}</div>
-          </div>`;
-      }).join("");
-    }
-
-    function renderNews(newsList) {
-      const now = new Date();
-      document.getElementById("news-time").textContent = now.toLocaleTimeString("et-EE", { hour: "2-digit", minute: "2-digit" });
-      document.getElementById("news-list").innerHTML = newsList.map((n, i) => {
-        let ago;
-        if (n.mins < 60) ago = n.mins + " min tagasi";
-        else if (n.mins < 1440) ago = Math.round(n.mins / 60) + " h tagasi";
-        else ago = Math.round(n.mins / 1440) + " p tagasi";
-        return `
-          <div class="news-item">
-            <span class="news-num tabular">${i + 1}</span>
-            <div>
-              <a href="${n.link}" target="_blank" rel="noopener" class="news-title">${n.title}</a>
-              <div class="news-meta">${n.category} · ${ago}</div>
-            </div>
-          </div>`;
-      }).join("");
-    }
-
-    // ─── Bind tabs & inputs ───────────────────────────────────
-    document.querySelectorAll("[data-chart-view]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        chartView = btn.dataset.chartView;
-        document.querySelectorAll("[data-chart-view]").forEach((b) => b.classList.toggle("active", b === btn));
-        renderChart();
-      });
     });
-    document.querySelectorAll("[data-grid-view]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        gridView = btn.dataset.gridView;
-        document.querySelectorAll("[data-grid-view]").forEach((b) => b.classList.toggle("active", b === btn));
-        renderGrid();
+    svg.onmouseleave = () => {
+      tip.classList.remove("show");
+      svg.querySelectorAll(".dot").forEach((c) => {
+        const ci = +c.dataset.i;
+        c.setAttribute("r", state.chartView === "today" && ci === ch ? "4.5" : "2.5");
       });
-    });
-    document.getElementById("calc-kwh").addEventListener("input", updateCalc);
-    document.getElementById("calc-hours").addEventListener("input", updateCalc);
-    document.getElementById("bill-kwh").addEventListener("input", updateBill);
+    };
+  }
 
-    // ─── Initialization Flow ──────────────────────────────────
-    async function initApp() {
-      // 1. Fetch live weather & news asynchronously
-      fetchWeather();
-      fetchNews();
-
-      // 2. Fetch live electricity prices
-      const prices = await fetchElectricityPrices();
-      if (prices && prices.todayPrices.length) {
-        today = prices.todayPrices;
-        tomorrow = prices.tomorrowPrices;
-
-        avg = average(today.map((p) => p.price));
-        current = today[currentHour] || today[0];
-        next = today[currentHour + 1] ?? (tomorrow[0] || current);
-        
-        const sorted = [...today].sort((a, b) => a.price - b.price);
-        cheapest = sorted[0];
-        mostExpensive = sorted[sorted.length - 1];
-        level = priceLevel(current.price, avg);
-        horizon = [...today.slice(currentHour), ...(tomorrow.length ? tomorrow : today)].slice(0, 24);
-        avg30d = +(avg * 0.96).toFixed(2);
-
-        // Update all UI components with real data
-        renderHero();
-        renderTimeline();
-        renderChart();
+  function renderCalculator() {
+    const chips = document.getElementById("appliance-chips");
+    chips.innerHTML = APPLIANCES.map(
+      (a, i) =>
+        '<button type="button" class="chip ' +
+        (i === state.selectedAppliance ? "active" : "") +
+        '" data-i="' +
+        i +
+        '">' +
+        a.name +
+        "</button>"
+    ).join("");
+    chips.querySelectorAll(".chip").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.selectedAppliance = +btn.dataset.i;
+        document.getElementById("calc-kwh").value = APPLIANCES[state.selectedAppliance].kwh;
+        document.getElementById("calc-hours").value = APPLIANCES[state.selectedAppliance].hours;
         renderCalculator();
-        renderCarbon();
-        renderNeighbors();
-        updateBill();
-        renderGrid();
-      } else {
-        document.getElementById("hero-level-label").textContent = "Viga andmete laadimisel";
-      }
-    }
+        updateCalc();
+      });
+    });
+    updateCalc();
+  }
 
-    initApp();
+  function updateCalc() {
+    const kwh = +document.getElementById("calc-kwh").value || 0;
+    const hours = +document.getElementById("calc-hours").value || 1;
+    const horizon = getHorizon();
+    const { best, worst, window } = findBestWorst(horizon, hours);
+    const bestCost = (best.sum * kwh) / 100;
+    const worstCost = (worst.sum * kwh) / 100;
+    const savings = worstCost - bestCost;
+    const savingsPct = worstCost > 0 ? (savings / worstCost) * 100 : 0;
+    const ch = state.currentHour;
+    const startH = (ch + best.start) % 24;
+    const endH = (ch + best.start + window) % 24;
+    const tomorrowFlag = ch + best.start >= 24;
+
+    document.getElementById("best-time").textContent =
+      (tomorrowFlag ? "Homme " : "Täna ") + formatHour(startH) + " – " + formatHour(endH);
+    document.getElementById("best-cost").textContent = bestCost.toFixed(2) + " €";
+    document.getElementById("best-avg").textContent = " (" + best.sum.toFixed(2) + " s/kWh)";
+    document.getElementById("best-save").textContent =
+      savings.toFixed(2) + " € · " + savingsPct.toFixed(0) + "%";
+  }
+
+  function renderCarbon() {
+    document.getElementById("co2-mix").innerHTML = MIX.map(
+      (r) =>
+        '<div class="mix-row"><span class="name">' +
+        r.label +
+        '</span><div class="mix-bar"><div style="width:' +
+        r.pct +
+        '%"></div></div><span class="mix-pct tabular">' +
+        r.pct +
+        "%</span></div>"
+    ).join("");
+  }
+
+  function renderNeighbors() {
+    document.getElementById("neighbors").innerHTML = state.neighbors
+      .map(
+        (it) =>
+          '<div class="neighbor ' +
+          (it.code === "EE" ? "ee" : "") +
+          '"><div class="neighbor-left"><span style="font-size:1rem">' +
+          it.flag +
+          '</span><span style="font-size:12px;font-weight:500">' +
+          it.code +
+          '</span></div><div class="neighbor-right"><span class="font-display tabular" style="font-size:1rem;font-weight:600">' +
+          (it.price ? it.price.toFixed(2) : "—") +
+          "</span>" +
+          (it.code !== "EE"
+            ? '<span class="tabular" style="width:3rem;text-align:right;font-size:11px;font-weight:600;color:' +
+              (it.delta < 0 ? "var(--price-cheap)" : "var(--price-expensive)") +
+              '">' +
+              (it.delta > 0 ? "+" : "") +
+              it.delta +
+              "%</span>"
+            : "") +
+          "</div></div>"
+      )
+      .join("");
+  }
+
+  function updateBill() {
+    const kwh = +document.getElementById("bill-kwh").value || 0;
+    const market = (state.avg * kwh) / 100;
+    const fixed = (11.4 * kwh) / 100;
+    document.getElementById("bill-market").textContent = market.toFixed(2) + " €";
+    document.getElementById("bill-fixed").textContent = fixed.toFixed(2) + " €";
+    document.getElementById("bill-save").textContent = (fixed - market).toFixed(2) + " €";
+  }
+
+  function renderGrid() {
+    const data = state.gridView === "today" ? state.today : state.tomorrow;
+    const avg = state.avg;
+    const ch = state.currentHour;
+    if (!data.length) {
+      document.getElementById("hourly-grid").innerHTML =
+        '<p style="color:var(--muted-foreground);font-size:14px">Homsed hinnad pole veel saadaval (tulevad ~14:00).</p>';
+      return;
+    }
+    document.getElementById("hourly-grid").innerHTML = data
+      .map((d, i) => {
+        const lvl = priceLevel(d.price, avg);
+        const isNow = state.gridView === "today" && i === ch;
+        return (
+          '<div class="hour-cell ' +
+          (isNow ? "now" : "") +
+          '"><div class="hour-top"><span class="tabular">' +
+          String(d.hour).padStart(2, "0") +
+          ":00</span>" +
+          (isNow ? '<span class="now-label">nüüd</span>' : "") +
+          '</div><div class="hour-price text-' +
+          lvl +
+          ' tabular">' +
+          d.price.toFixed(2) +
+          "</div></div>"
+        );
+      })
+      .join("");
+  }
+
+  function renderNews() {
+    const box = document.getElementById("news-list");
+    const timeEl = document.getElementById("news-time");
+    timeEl.textContent = new Date().toLocaleTimeString("et-EE", { hour: "2-digit", minute: "2-digit" });
+    const rss =
+      "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent("https://www.err.ee/rss");
+    fetchTimeout(rss, 9000)
+      .then((data) => {
+        if (!data.items || !data.items.length) throw new Error("empty");
+        box.innerHTML = data.items
+          .slice(0, 6)
+          .map((item, i) => {
+            const pub = new Date(item.pubDate);
+            const mins = Math.max(0, Math.round((Date.now() - pub.getTime()) / 60000));
+            let ago =
+              mins < 60
+                ? mins + " min tagasi"
+                : mins < 1440
+                  ? Math.round(mins / 60) + " h tagasi"
+                  : Math.round(mins / 1440) + " p tagasi";
+            return (
+              '<div class="news-item"><span class="news-num tabular">' +
+              (i + 1) +
+              '</span><div><a class="news-title" href="' +
+              item.link +
+              '" target="_blank" rel="noopener">' +
+              item.title +
+              '</a><div class="news-meta">ERR · ' +
+              ago +
+              "</div></div></div>"
+            );
+          })
+          .join("");
+      })
+      .catch(() => {
+        box.innerHTML =
+          '<p style="font-size:14px;color:var(--muted-foreground)">Uudiseid ei õnnestunud laadida.</p>';
+      });
+  }
+
+  function loadWeather() {
+    const apply = (lat, lon, city) => {
+      const url =
+        CONFIG.WEATHER +
+        "?latitude=" +
+        lat.toFixed(4) +
+        "&longitude=" +
+        lon.toFixed(4) +
+        "&current=temperature_2m&timezone=auto";
+      fetchTimeout(url, 7000)
+        .then((j) => {
+          if (j.current) {
+            document.getElementById("weather-temp").textContent =
+              Math.round(j.current.temperature_2m) + "°C";
+            const loc = document.querySelector(".weather span:last-child");
+            if (loc && city) loc.textContent = city;
+          }
+        })
+        .catch(() => {});
+    };
+    if (!navigator.geolocation) {
+      apply(59.437, 24.754, "Tallinn");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => apply(pos.coords.latitude, pos.coords.longitude, "Sinu asukoht"),
+      () => apply(59.437, 24.754, "Tallinn"),
+      { timeout: 4000 }
+    );
+  }
+
+  /* ========== BIND ========== */
+  document.querySelectorAll("[data-chart-view]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.chartView = btn.dataset.chartView;
+      document.querySelectorAll("[data-chart-view]").forEach((b) => b.classList.toggle("active", b === btn));
+      renderChart();
+    });
+  });
+  document.querySelectorAll("[data-grid-view]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.gridView = btn.dataset.gridView;
+      document.querySelectorAll("[data-grid-view]").forEach((b) => b.classList.toggle("active", b === btn));
+      renderGrid();
+    });
+  });
+  document.getElementById("calc-kwh").addEventListener("input", updateCalc);
+  document.getElementById("calc-hours").addEventListener("input", updateCalc);
+  document.getElementById("bill-kwh").addEventListener("input", updateBill);
+
+  const refreshBtn = document.getElementById("btn-refresh");
+  if (refreshBtn) refreshBtn.addEventListener("click", () => loadPrices());
+
+  loadPrices();
+  loadWeather();
+  renderNews();
+  setInterval(() => {
+    if (document.visibilityState === "visible") loadPrices();
+  }, 15 * 60 * 1000);
   </script>
+
 </body>
 </html>
