@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elektri Börsihind & Uudised</title>
+  <title>Elektrihind24</title>
   <!-- Chart.js graafikute teek -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -28,7 +28,7 @@
 
     /* Header & Weather */
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
-    h1 { font-size: 1.5rem; font-weight: 700; }
+    h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
     
     #weather { display: flex; align-items: center; gap: 12px; background: var(--card-bg); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border); }
     .weather-icon { font-size: 1.5rem; }
@@ -86,8 +86,6 @@
     .price-pill { padding: 2px 8px; border-radius: 6px; font-weight: 600; }
 
     /* Modals & FAQ */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; padding: 20px; align-items: center; justify-content: center; }
-    .modal-content { background: var(--card-bg); padding: 24px; border-radius: 16px; max-width: 500px; width: 100%; border: 1px solid var(--border); }
     .faq-q { cursor: pointer; padding: 12px 0; border-bottom: 1px solid var(--border); font-weight: 600; }
     .faq-a { display: none; padding: 12px 0; color: var(--text-muted); font-size: 0.9rem; }
     .faq-a.open { display: block; }
@@ -104,7 +102,7 @@
 <body>
 
   <header>
-    <h1>⚡ Elektri Börsihind</h1>
+    <h1>⚡ Elektrihind24</h1>
     <div id="weather"></div>
   </header>
 
@@ -116,7 +114,9 @@
   <div class="grid-container">
     <!-- Left Column: Primary Viz & Chart -->
     <div id="left-col">
-      <div id="viz"></div>
+      <div id="viz">
+        <div class="card price-card" style="padding: 40px;">Laadin börsihindu...</div>
+      </div>
       
       <div class="card">
         <h3 style="font-size: 1rem; margin-bottom: 12px;">Hinnagraafik (s/kWh)</h3>
@@ -167,7 +167,7 @@
   <div class="card" style="margin-top: 20px;">
     <h3 style="font-size: 1rem; margin-bottom: 12px;">Korduma kippuvad küsimused</h3>
     <div class="faq-q" onclick="toggleFaq(this)">Kust pärinevad börsihinnad?</div>
-    <div class="faq-a">Hinnad pärinevad Nord Pooli börsilt ning sisaldavad käibemaksu.</div>
+    <div class="faq-a">Hinnad pärinevad Nord Pooli börsilt (Elering API kaudu) ning sisaldavad 24% käibemaksu.</div>
     <div class="faq-q" onclick="toggleFaq(this)">Millal avaldatakse homsed hinnad?</div>
     <div class="faq-a">Järgmise päeva tunnihinnad avaldatakse igal tööpäeval umbes kell 14:30.</div>
   </div>
@@ -187,9 +187,6 @@
     VAT: 1.24, // 24% käibemaks
     CACHE_TTL_MS: 15 * 60 * 1000,
     FETCH_TIMEOUT_MS: 8000,
-    NEWS_REFRESH_INTERVAL_MS: 300000,
-    SCRIPT_URL: 'https://dashboard.elering.ee/api/nordre-pool/ee',
-    ELERING_API: 'https://dashboard.elering.ee/api/nordre-pool/ee',
     WEATHER_API: 'https://api.open-meteo.com/v1/forecast'
   };
 
@@ -251,7 +248,6 @@
     return findCheapPeriod(processed, windowHours);
   }
 
-  /* ========== INSIGHTS & ANIMATION ========== */
   function generateInsight(processed, avg, curHour) {
     if (!processed.length) return '';
     const cheapPeriod = findUpcomingCheapPeriod(processed, 3, curHour);
@@ -296,7 +292,89 @@
       .catch(e => { clearTimeout(timer); throw e; });
   }
 
-  /* ========== ERR NEWS WIDGET ========== */
+  /* ========== BÖRSIHINNA LAADIMINE (ELERING API) ========== */
+  async function fetchEleringPrices() {
+    const now = new Date();
+    
+    // Loome ajavahemiku: eilse algusest kuni ülehomse lõpuni, et katta ajavööndid
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 23, 59, 59);
+
+    const startIso = encodeURIComponent(start.toISOString());
+    const endIso = encodeURIComponent(end.toISOString());
+
+    // Proovime erinevaid Elering API teid
+    const urls = [
+      `https://dashboard.elering.ee/api/nordre-pool/ee?start=${startIso}&end=${endIso}`,
+      `https://dashboard.elering.ee/api/nordpool/ee?start=${startIso}&end=${endIso}`
+    ];
+
+    for (const url of urls) {
+      try {
+        const res = await fetchWithTimeout(url, CONFIG.FETCH_TIMEOUT_MS);
+        if (!res.ok) continue;
+        const json = await res.json();
+        let data = null;
+        if (json && json.data) {
+          data = json.data.ee || json.data;
+        } else if (Array.isArray(json)) {
+          data = json;
+        }
+        if (Array.isArray(data) && data.length > 0) {
+          return data;
+        }
+      } catch (e) {
+        console.warn('Elering fetch proov ebaõnnestus URL-ilt:', url, e);
+      }
+    }
+    throw new Error('Elektrihindade laadimine ebaõnnestus.');
+  }
+
+  function saveCache(data) { try { localStorage.setItem('eh_cache', JSON.stringify({ data, ts: Date.now() })); } catch(e) {} }
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem('eh_cache');
+      if (!raw) return null;
+      const c = JSON.parse(raw);
+      if (Date.now() - c.ts < CONFIG.CACHE_TTL_MS) return c.data;
+    } catch(e) {}
+    return null;
+  }
+
+  async function loadData() {
+    if (state.isLoading) return;
+    
+    // Kasuta puhvrit, kui saadaval
+    const cached = loadCache();
+    if (cached && cached.length) {
+      state.allPrices = cached;
+      render();
+    }
+
+    state.isLoading = true;
+
+    try {
+      const data = await fetchEleringPrices();
+      saveCache(data);
+      state.allPrices = data;
+      render();
+    } catch (err) {
+      if (!cached) showError();
+    } finally {
+      state.isLoading = false;
+    }
+  }
+
+  function showError() {
+    document.getElementById('viz').innerHTML = `
+      <div class="card error-card">
+        <div style="font-weight:600;">Andmete laadimine ebaõnnestus</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Palun kontrolli võrguühendust või proovi uuesti.</div>
+        <button class="btn" onclick="loadData()">Proovi uuesti</button>
+      </div>`;
+  }
+
+  /* ========== ERR UUDISED ========== */
   function loadErrNews() {
     const container = document.getElementById('news-container');
     if (!container) return;
@@ -325,7 +403,7 @@
       });
   }
 
-  /* ========== ILMAMOODUL (TÄIUSTATUD) ========== */
+  /* ========== ILMAMOODUL ========== */
   const WMO_CODES = {
     0:'Selge',1:'Peamiselt selge',2:'Osaliselt pilves',3:'Pilves',
     45:'Udu',48:'Härmatis',51:'Kerge uduvihm',53:'Uduvihm',55:'Tihe uduvihm',
@@ -346,7 +424,6 @@
     const desc = WMO_CODES[w.wmo] || '';
     const wind = w.wind ? ` · Tuul ${Math.round(w.wind)} km/h` : '';
     
-    // Tänane temperatuurivahemik (min / max)
     const todayRange = (w.minTemp !== null && w.maxTemp !== null) 
       ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Täna: <strong>${Math.round(w.minTemp)}°C</strong> ... <strong>${Math.round(w.maxTemp)}°C</strong></div>` 
       : '';
@@ -362,7 +439,6 @@
   }
 
   function loadWeather(lat, lon, city) {
-    // API päring sisaldab nii hetkeilma kui ka tänaseid päeva prognoose (min/max temp)
     const url = `${CONFIG.WEATHER_API}?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&wind_speed_unit=kmh&timezone=auto`;
     fetchWithTimeout(url, 6000)
       .then(r => r.json())
@@ -394,11 +470,7 @@
     );
   }
 
-  /* ========== MODALS & COOKIES ========== */
-  function openModal(id) { const el = document.getElementById('modal-' + id); if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; } }
-  function closeModal(id) { const el = document.getElementById('modal-' + id); if (el) { el.style.display = 'none'; document.body.style.overflow = ''; } }
-  function closeModalOutside(e, id) { if (e.target === document.getElementById('modal-' + id)) closeModal(id); }
-
+  /* ========== COOKIES & FAQ ========== */
   function cookieAccept() {
     try { localStorage.setItem('cookieConsent', 'accepted'); } catch(e) {}
     document.getElementById('cookie-banner').style.display = 'none';
@@ -419,7 +491,6 @@
     } catch(e) {}
   })();
 
-  /* ========== FAQ ========== */
   function toggleFaq(qEl) {
     const aEl = qEl.nextElementSibling;
     const isOpen = qEl.classList.contains('open');
@@ -430,62 +501,7 @@
     if (!isOpen) { qEl.classList.add('open'); aEl.classList.add('open'); }
   }
 
-  /* ========== CACHE & DATA ========== */
-  function saveCache(data) { try { localStorage.setItem('eh_cache', JSON.stringify({ data, ts: Date.now() })); } catch(e) {} }
-  function loadCache() {
-    try {
-      const raw = localStorage.getItem('eh_cache');
-      if (!raw) return null;
-      const c = JSON.parse(raw);
-      if (Date.now() - c.ts < CONFIG.CACHE_TTL_MS) return c.data;
-    } catch(e) {}
-    return null;
-  }
-
-  function loadData() {
-    if (state.isLoading) return;
-    const cached = loadCache();
-    if (cached && cached.length) {
-      state.allPrices = cached;
-      render();
-    }
-
-    state.isLoading = true;
-    fetchWithTimeout(CONFIG.SCRIPT_URL + '?t=' + Date.now(), CONFIG.FETCH_TIMEOUT_MS)
-      .then(res => res.json())
-      .then(json => {
-        const data = (json.data && json.data.ee) ? json.data.ee : (json.data || []);
-        if (!data.length) throw new Error();
-        saveCache(data);
-        state.allPrices = data;
-        render();
-      })
-      .catch(() => {
-        const now = new Date();
-        const start = new Date(now); start.setHours(0,0,0,0);
-        const end = new Date(now); end.setDate(end.getDate() + 1);
-        fetchWithTimeout(`${CONFIG.ELERING_API}?start=${encodeURIComponent(start.toISOString())}&end=${encodeURIComponent(end.toISOString())}`, CONFIG.FETCH_TIMEOUT_MS)
-          .then(r => r.json())
-          .then(j => {
-            const data2 = (j.data && j.data.ee) ? j.data.ee : [];
-            if (!data2.length) throw new Error();
-            saveCache(data2);
-            state.allPrices = data2;
-            render();
-          })
-          .catch(() => { if (!cached) showError(); });
-      })
-      .finally(() => { state.isLoading = false; });
-  }
-
-  function showError() {
-    document.getElementById('viz').innerHTML = `
-      <div class="card error-card">
-        <div style="font-weight:600;">Andmete laadimine ebaõnnestus</div>
-        <button class="btn" onclick="loadData()">Proovi uuesti</button>
-      </div>`;
-  }
-
+  /* ========== DISPLAY & RENDERING ========== */
   function setView(v) {
     state.currentView = v;
     document.getElementById('btn-today').className = v === 'today' ? 'day-btn active' : 'day-btn';
@@ -494,7 +510,7 @@
   }
 
   function render() {
-    if (!state.allPrices.length) return;
+    if (!state.allPrices || !state.allPrices.length) return;
     const now = new Date();
     const targetDate = new Date();
     if (state.currentView === 'tomorrow') targetDate.setDate(now.getDate() + 1);
@@ -508,7 +524,7 @@
       document.getElementById('viz').innerHTML = `
         <div class="card price-card" style="text-align:center; padding: 40px;">
           <div style="font-size:1.1rem; font-weight:600; margin-bottom:8px;">Homsed hinnad pole veel saadaval</div>
-          <div style="font-size:0.85rem; color:var(--text-muted);">Hinnad avaldatakse igal päeval u. kell 14:30</div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">Nord Pool avaldab järgmise päeva hinnad u. kell 14:30.</div>
         </div>`;
       document.getElementById('right-col').style.display = 'none';
       document.getElementById('table-section').style.display = 'none';
@@ -522,6 +538,11 @@
       hour: new Date(d.timestamp * 1000).getHours(),
       price: Math.max(0, parseFloat(((d.price / 10) * CONFIG.VAT).toFixed(2)))
     })).sort((a,b) => a.hour - b.hour);
+
+    if (!processed.length) {
+      showError();
+      return;
+    }
 
     const prices = processed.map(p => p.price);
     const maxVal = Math.max(...prices);
@@ -645,10 +666,6 @@
   }
 
   /* ========== INIT ========== */
-  setInterval(() => {
-    if (document.visibilityState === 'visible') loadErrNews();
-  }, CONFIG.NEWS_REFRESH_INTERVAL_MS);
-
   loadData();
   initWeather();
   loadErrNews();
