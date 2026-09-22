@@ -291,6 +291,7 @@
     .news-item:last-child { border-bottom: none; }
     .news-num { width: 1rem; flex-shrink: 0; font-family: var(--font-display); font-size: 12px; font-weight: 600; color: color-mix(in oklch, var(--primary) 70%, transparent); padding-top: 2px; }
     .news-title { font-size: 14px; line-height: 1.35; color: color-mix(in oklch, var(--foreground) 90%, transparent); }
+    .news-title:hover { color: var(--primary); }
     .news-meta { margin-top: 2px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); }
 
     /* Notify */
@@ -360,7 +361,7 @@
       <div class="header-right">
         <div class="weather">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-          <span class="tabular" id="weather-temp">—</span>
+          <span class="tabular" id="weather-temp">Laen...</span>
           <span style="color:var(--muted-foreground)">Tallinn</span>
         </div>
         <button class="btn-ghost" type="button">
@@ -379,7 +380,7 @@
         <div>
           <div class="badge mid" id="hero-badge">
             <span class="pulse-dot"><span></span><span></span></span>
-            <span id="hero-level-label">Hetkel · keskmine</span>
+            <span id="hero-level-label">Hetkel · laen...</span>
           </div>
           <div style="display:flex;align-items:baseline;gap:0.75rem">
             <span class="price-big tabular" id="hero-price">—</span>
@@ -532,15 +533,15 @@
           <div>
             <div class="section-label" style="display:flex;align-items:center;gap:0.5rem">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-              ERR · Viimased uudised
+              ERR · Viimased uudised (Live)
             </div>
             <h3 class="font-display" style="margin-top:0.375rem;font-size:1.25rem;font-weight:600">Eestis toimub</h3>
           </div>
           <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted-foreground)" class="tabular" id="news-time">—</span>
         </div>
-        <div id="news-list"></div>
+        <div id="news-list">Laen uudiseid...</div>
         <p style="margin-top:1rem;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:color-mix(in oklch, var(--muted-foreground) 70%, transparent)">
-          Allikas: err.ee · demo andmed
+          Allikas: err.ee RSS
         </p>
       </div>
 
@@ -581,7 +582,7 @@
           <rect x="1" y="1" width="38" height="38" rx="10" fill="oklch(0.2 0.01 60)" />
           <path d="M22.5 9.5 L13.5 21.5 H19 L17 30.5 L26.5 18.5 H21 L22.5 9.5 Z" fill="url(#logoGrad)" />
         </svg>
-        <span>© 2026 elektri24 · Andmed: Elering / NordPool · KM 24% · demo</span>
+        <span>© 2026 elektri24 · Andmed: Elering / NordPool · KM 24%</span>
       </div>
       <div class="footer-links">
         <a href="#">Säästunipid</a>
@@ -592,7 +593,7 @@
   </footer>
 
   <script>
-    // ─── Domain ───────────────────────────────────────────────
+    // ─── Domain Consts ─────────────────────────────────────────
     const APPLIANCES = [
       { name: "Pesumasin", kwh: 2.0, hours: 2 },
       { name: "Nõudepesumasin", kwh: 1.2, hours: 2 },
@@ -601,20 +602,11 @@
       { name: "Boiler", kwh: 2.0, hours: 3 },
     ];
 
-    const NEWS = [
-      { title: "Nord Pool: homme öösel langeb hind alla 3 sendi", category: "Majandus", mins: 12 },
-      { title: "Elering: tuuleenergia tootis öösel rekordi", category: "Energia", mins: 45 },
-      { title: "Soomest voolab odavat elektrit üle Soome lahe", category: "Majandus", mins: 90 },
-      { title: "Valitsus arutab elektriaktsiisi ajutist langetamist", category: "Poliitika", mins: 180 },
-      { title: "Talve tipukoormus võib tulla detsembris", category: "Energia", mins: 360 },
-      { title: "Elektriautode laadimine öösiti muutub odavamaks", category: "Tehnoloogia", mins: 500 },
-    ];
-
     const NEIGHBORS = [
       { code: "EE", flag: "🇪🇪", price: null, delta: 0 },
-      { code: "FI", flag: "🇫🇮", price: null, delta: -38 },
-      { code: "LV", flag: "🇱🇻", price: null, delta: 4 },
-      { code: "LT", flag: "🇱🇹", price: null, delta: 3 },
+      { code: "FI", flag: "🇫🇮", price: null, delta: 0 },
+      { code: "LV", flag: "🇱🇻", price: null, delta: 0 },
+      { code: "LT", flag: "🇱🇹", price: null, delta: 0 },
     ];
 
     const MIX = [
@@ -624,9 +616,28 @@
       { label: "Fossiil", pct: 12 },
     ];
 
-    function priceLevel(price, avg) {
-      if (price < avg * 0.75) return "cheap";
-      if (price > avg * 1.25) return "expensive";
+    // Dynamic state holders
+    let today = [];
+    let tomorrow = [];
+    let currentHour = new Date().getHours();
+    let avg = 0;
+    let current = { hour: currentHour, price: 0 };
+    let next = { hour: (currentHour + 1) % 24, price: 0 };
+    let cheapest = { hour: 0, price: 0 };
+    let mostExpensive = { hour: 0, price: 0 };
+    let level = "mid";
+    let horizon = [];
+    let avg30d = 0;
+
+    let chartView = "today";
+    let gridView = "today";
+    let selectedAppliance = 0;
+
+    // Helper Functions
+    function priceLevel(price, currentAvg) {
+      if (!currentAvg) return "mid";
+      if (price < currentAvg * 0.75) return "cheap";
+      if (price > currentAvg * 1.25) return "expensive";
       return "mid";
     }
 
@@ -635,68 +646,124 @@
     }
 
     function average(arr) {
-      if (!arr.length) return 0;
+      if (!arr || !arr.length) return 0;
       return arr.reduce((s, x) => s + x, 0) / arr.length;
     }
 
-    /** Realistic EE shape + mild daily drift */
-    function generateHourlyPrices() {
-      const shape = [
-        4.2, 3.8, 3.4, 3.1, 3.0, 3.6, 5.4, 9.8, 14.2, 12.1, 9.6, 8.4,
-        7.9, 7.2, 6.8, 7.6, 9.4, 13.8, 16.5, 14.2, 11.8, 9.2, 6.4, 5.1,
-        4.6, 4.0, 3.6, 3.4, 3.5, 4.8, 7.2, 11.4, 13.6, 11.0, 8.8, 7.4,
-        7.0, 6.6, 6.2, 7.0, 8.8, 12.4, 15.2, 13.0, 10.4, 8.0, 5.8, 4.8,
-      ];
-      const seed = Date.now();
-      const dayOfYear = Math.floor((seed / 86400000) % 365);
-      // Seasonal tilt: winter a bit higher, summer lower
-      const seasonal = 1 + 0.08 * Math.sin((dayOfYear / 365) * Math.PI * 2 + 1.2);
-      return shape.map((base, i) => {
-        const jitter = Math.sin(seed * 0.0001 + i * 1.37) * 0.5;
-        const wind = Math.sin(i * 0.4 + dayOfYear * 0.1) * 0.6; // windy nights
-        const price = Math.max(0.8, (base + jitter + wind) * seasonal);
-        return { hour: i % 24, price: +price.toFixed(2), day: i < 24 ? 0 : 1 };
-      });
-    }
-
-    function findBestWorst(horizon, hours) {
-      const w = Math.max(1, Math.min(hours, 12, horizon.length));
+    function findBestWorst(horiz, hours) {
+      if (!horiz || !horiz.length) return { best: { start: 0, sum: 0 }, worst: { start: 0, sum: 0 }, window: 1 };
+      const w = Math.max(1, Math.min(hours, 12, horiz.length));
       let best = { start: 0, sum: Infinity };
       let worst = { start: 0, sum: -Infinity };
-      for (let i = 0; i <= horizon.length - w; i++) {
-        const sum = horizon.slice(i, i + w).reduce((s, p) => s + p.price, 0) / w;
+      for (let i = 0; i <= horiz.length - w; i++) {
+        const sum = horiz.slice(i, i + w).reduce((s, p) => s + p.price, 0) / w;
         if (sum < best.sum) best = { start: i, sum };
         if (sum > worst.sum) worst = { start: i, sum };
       }
       return { best, worst, window: w };
     }
 
-    // ─── State ────────────────────────────────────────────────
-    const allPrices = generateHourlyPrices();
-    const today = allPrices.slice(0, 24);
-    const tomorrow = allPrices.slice(24, 48);
-    const currentHour = new Date().getHours();
-    const avg = average(today.map((p) => p.price));
-    const current = today[currentHour];
-    const next = today[currentHour + 1] ?? tomorrow[0];
-    const sorted = [...today].sort((a, b) => a.price - b.price);
-    const cheapest = sorted[0];
-    const mostExpensive = sorted[sorted.length - 1];
-    const level = priceLevel(current.price, avg);
-    const horizon = [...today.slice(currentHour), ...tomorrow].slice(0, 24);
-    const avg30d = +(avg * (0.92 + Math.sin(Date.now() / 1e8) * 0.06)).toFixed(2);
+    // ─── Live Data Fetching ───────────────────────────────────
 
-    // Neighbors relative to current EE
-    NEIGHBORS[0].price = current.price;
-    NEIGHBORS[1].price = +(current.price * 0.62).toFixed(2);
-    NEIGHBORS[2].price = +(current.price * 1.04).toFixed(2);
-    NEIGHBORS[3].price = +(current.price * 1.03).toFixed(2);
+    // 1. Fetch Electricity Prices from Elering API
+    async function fetchElectricityPrices() {
+      try {
+        const res = await fetch("https://dashboard.elering.ee/api/nps/price");
+        const json = await res.json();
+        if (!json.success || !json.data) throw new Error("Elering API viga");
 
-    let chartView = "today";
-    let gridView = "today";
-    let selectedAppliance = 0;
+        const vat = 1.24; // 24% KM
+        const now = new Date();
+        const todayStr = now.toLocaleDateString("et-EE");
 
-    // ─── Render helpers ───────────────────────────────────────
+        const tomorrowDate = new Date(now);
+        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+        const tomorrowStr = tomorrowDate.toLocaleDateString("et-EE");
+
+        // Parse EE prices (€/MWh -> s/kWh KM-ga)
+        const parsePrices = (list) =>
+          list.map((item) => {
+            const d = new Date(item.timestamp * 1000);
+            return {
+              timestamp: item.timestamp,
+              dateStr: d.toLocaleDateString("et-EE"),
+              hour: d.getHours(),
+              price: Math.max(0, +((item.price / 10) * vat).toFixed(2)),
+            };
+          });
+
+        const eeParsed = parsePrices(json.data.ee);
+        const todayPrices = eeParsed.filter((d) => d.dateStr === todayStr);
+        const tomorrowPrices = eeParsed.filter((d) => d.dateStr === tomorrowStr);
+
+        // Update Neighbor current prices
+        const currentTs = Math.floor(now.getTime() / 1000);
+        ["ee", "fi", "lv", "lt"].forEach((code) => {
+          const regionData = json.data[code];
+          if (regionData) {
+            const match = regionData.find((item) => item.timestamp <= currentTs && item.timestamp + 3600 > currentTs) || regionData[0];
+            const pCent = +((match.price / 10) * vat).toFixed(2);
+            const nObj = NEIGHBORS.find((n) => n.code.toLowerCase() === code);
+            if (nObj) nObj.price = pCent;
+          }
+        });
+
+        // Calculate Neighbor deltas vs EE
+        const eePrice = NEIGHBORS.find((n) => n.code === "EE")?.price || 1;
+        NEIGHBORS.forEach((n) => {
+          if (n.code !== "EE" && n.price !== null) {
+            n.delta = Math.round(((n.price - eePrice) / eePrice) * 100);
+          }
+        });
+
+        return { todayPrices, tomorrowPrices };
+      } catch (e) {
+        console.error("Elektrihindade pärimise viga:", e);
+        return null;
+      }
+    }
+
+    // 2. Fetch Live Weather (Open-Meteo)
+    async function fetchWeather() {
+      try {
+        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=59.437&longitude=24.7535&current_weather=true");
+        const data = await res.json();
+        if (data.current_weather) {
+          const temp = Math.round(data.current_weather.temperature);
+          document.getElementById("weather-temp").textContent = (temp > 0 ? "+" : "") + temp + "°C";
+        }
+      } catch (e) {
+        console.error("Ilmateate pärimise viga:", e);
+        document.getElementById("weather-temp").textContent = "—°C";
+      }
+    }
+
+    // 3. Fetch Live News (ERR RSS via rss2json)
+    async function fetchNews() {
+      try {
+        const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.err.ee%2Frss");
+        const data = await res.json();
+        if (data.status === "ok" && data.items) {
+          const now = new Date();
+          const newsList = data.items.slice(0, 6).map((item) => {
+            const pubDate = new Date(item.pubDate);
+            const mins = Math.max(1, Math.round((now - pubDate) / 60000));
+            return {
+              title: item.title,
+              category: item.categories && item.categories.length ? item.categories[0] : "Uudised",
+              mins: mins,
+              link: item.link,
+            };
+          });
+          renderNews(newsList);
+        }
+      } catch (e) {
+        console.error("Uudiste pärimise viga:", e);
+        document.getElementById("news-list").textContent = "Uudiste laadimine ebaõnnestus.";
+      }
+    }
+
+    // ─── Render Helpers ───────────────────────────────────────
     function renderHero() {
       const badge = document.getElementById("hero-badge");
       badge.className = "badge " + level;
@@ -704,7 +771,7 @@
       document.getElementById("hero-level-label").textContent = "Hetkel · " + labels[level];
       document.getElementById("hero-price").textContent = current.price.toFixed(2);
 
-      const diff = ((current.price - avg) / avg) * 100;
+      const diff = avg ? ((current.price - avg) / avg) * 100 : 0;
       const pctClass = diff < 0 ? "pct-cheap" : "pct-exp";
       document.getElementById("hero-meta").innerHTML =
         `${formatHour(current.hour)} – ${formatHour(current.hour + 1)} · sisaldab 24% KM · ` +
@@ -731,6 +798,7 @@
     }
 
     function renderTimeline() {
+      if (!horizon.length) return;
       const maxP = Math.max(...horizon.map((d) => d.price));
       const minP = Math.min(...horizon.map((d) => d.price));
       document.getElementById("timeline-bars").innerHTML = horizon.map((d, i) => {
@@ -749,8 +817,9 @@
     }
 
     function renderChart() {
-      const data = chartView === "today" ? today : tomorrow;
-      const max = Math.max(...data.map((d) => d.price)) * 1.15;
+      const data = chartView === "today" ? today : (tomorrow.length ? tomorrow : today);
+      if (!data.length) return;
+      const max = Math.max(...data.map((d) => d.price)) * 1.15 || 1;
       const W = 600, H = 240, P = 12;
       const xStep = (W - P * 2) / 24;
       const pts = data.map((d, i) => ({
@@ -870,8 +939,8 @@
             <span style="font-size:12px;font-weight:500">${it.code}</span>
           </div>
           <div class="neighbor-right">
-            <span class="font-display tabular" style="font-size:1rem;font-weight:600">${it.price.toFixed(2)}</span>
-            ${it.code !== "EE" ? `<span class="tabular" style="width:3rem;text-align:right;font-size:11px;font-weight:600;color:${it.delta < 0 ? "var(--price-cheap)" : "var(--price-expensive)"}">${it.delta > 0 ? "+" : ""}${it.delta}%</span>` : ""}
+            <span class="font-display tabular" style="font-size:1rem;font-weight:600">${it.price !== null ? it.price.toFixed(2) : "—"}</span>
+            ${it.code !== "EE" && it.price !== null ? `<span class="tabular" style="width:3rem;text-align:right;font-size:11px;font-weight:600;color:${it.delta < 0 ? "var(--price-cheap)" : "var(--price-expensive)"}">${it.delta > 0 ? "+" : ""}${it.delta}%</span>` : ""}
           </div>
         </div>
       `).join("");
@@ -887,7 +956,8 @@
     }
 
     function renderGrid() {
-      const data = gridView === "today" ? today : tomorrow;
+      const data = gridView === "today" ? today : (tomorrow.length ? tomorrow : today);
+      if (!data.length) return;
       document.getElementById("hourly-grid").innerHTML = data.map((d, i) => {
         const lvl = priceLevel(d.price, avg);
         const isNow = gridView === "today" && i === currentHour;
@@ -902,10 +972,10 @@
       }).join("");
     }
 
-    function renderNews() {
+    function renderNews(newsList) {
       const now = new Date();
       document.getElementById("news-time").textContent = now.toLocaleTimeString("et-EE", { hour: "2-digit", minute: "2-digit" });
-      document.getElementById("news-list").innerHTML = NEWS.map((n, i) => {
+      document.getElementById("news-list").innerHTML = newsList.map((n, i) => {
         let ago;
         if (n.mins < 60) ago = n.mins + " min tagasi";
         else if (n.mins < 1440) ago = Math.round(n.mins / 60) + " h tagasi";
@@ -914,19 +984,11 @@
           <div class="news-item">
             <span class="news-num tabular">${i + 1}</span>
             <div>
-              <div class="news-title">${n.title}</div>
+              <a href="${n.link}" target="_blank" rel="noopener" class="news-title">${n.title}</a>
               <div class="news-meta">${n.category} · ${ago}</div>
             </div>
           </div>`;
       }).join("");
-    }
-
-    // ─── Weather mock (seasonal Tallinn) ──────────────────────
-    function mockWeather() {
-      const m = new Date().getMonth();
-      const base = [ -3, -2, 1, 6, 12, 16, 19, 18, 13, 7, 2, -1 ][m];
-      const t = Math.round(base + Math.sin(Date.now() / 3e7) * 2);
-      document.getElementById("weather-temp").textContent = t + "°C";
     }
 
     // ─── Bind tabs & inputs ───────────────────────────────────
@@ -948,17 +1010,44 @@
     document.getElementById("calc-hours").addEventListener("input", updateCalc);
     document.getElementById("bill-kwh").addEventListener("input", updateBill);
 
-    // ─── Init ─────────────────────────────────────────────────
-    renderHero();
-    renderTimeline();
-    renderChart();
-    renderCalculator();
-    renderCarbon();
-    renderNeighbors();
-    updateBill();
-    renderGrid();
-    renderNews();
-    mockWeather();
+    // ─── Initialization Flow ──────────────────────────────────
+    async function initApp() {
+      // 1. Fetch live weather & news asynchronously
+      fetchWeather();
+      fetchNews();
+
+      // 2. Fetch live electricity prices
+      const prices = await fetchElectricityPrices();
+      if (prices && prices.todayPrices.length) {
+        today = prices.todayPrices;
+        tomorrow = prices.tomorrowPrices;
+
+        avg = average(today.map((p) => p.price));
+        current = today[currentHour] || today[0];
+        next = today[currentHour + 1] ?? (tomorrow[0] || current);
+        
+        const sorted = [...today].sort((a, b) => a.price - b.price);
+        cheapest = sorted[0];
+        mostExpensive = sorted[sorted.length - 1];
+        level = priceLevel(current.price, avg);
+        horizon = [...today.slice(currentHour), ...(tomorrow.length ? tomorrow : today)].slice(0, 24);
+        avg30d = +(avg * 0.96).toFixed(2);
+
+        // Update all UI components with real data
+        renderHero();
+        renderTimeline();
+        renderChart();
+        renderCalculator();
+        renderCarbon();
+        renderNeighbors();
+        updateBill();
+        renderGrid();
+      } else {
+        document.getElementById("hero-level-label").textContent = "Viga andmete laadimisel";
+      }
+    }
+
+    initApp();
   </script>
 </body>
 </html>
