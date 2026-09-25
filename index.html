@@ -309,6 +309,21 @@
     }
     .best-box .tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--price-cheap); }
     .best-box .time { margin-top: 4px; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
+    .appl-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 0.25rem; }
+    .appl-table th {
+      text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted-foreground); font-weight: 600; padding: 0.4rem 0.35rem; border-bottom: 1px solid var(--border);
+    }
+    .appl-table td {
+      padding: 0.55rem 0.35rem; border-bottom: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
+      vertical-align: top;
+    }
+    .appl-table tr:last-child td { border-bottom: none; }
+    .appl-table .appl-name { font-weight: 600; }
+    .appl-table .appl-meta { font-size: 11px; color: var(--muted-foreground); margin-top: 2px; }
+    .appl-table .appl-cost { font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .appl-table .appl-best { font-size: 11px; color: var(--price-cheap); font-variant-numeric: tabular-nums; }
+    .appl-foot { margin-top: 0.75rem; font-size: 11px; color: var(--muted-foreground); line-height: 1.4; }
     .save-row {
       margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between;
       border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
@@ -449,7 +464,7 @@
           </div>
           <div style="display:flex;align-items:baseline;gap:0.75rem">
             <span class="price-big tabular" id="hero-price">—</span>
-            <span class="price-unit">s/kWh</span>
+            <span class="price-unit">s/kWh <span style="font-size:0.55em;font-weight:500;color:var(--muted-foreground)">sis. KM</span></span>
           </div>
           <p class="hero-meta" id="hero-meta"></p>
           <div class="next-hour">
@@ -470,7 +485,7 @@
         <div class="card-head">
           <div>
             <h2 class="card-title">Hinnagraafik</h2>
-            <p class="card-sub">15 min · s/kWh</p>
+            <p class="card-sub">15 min · s/kWh sis. KM</p>
           </div>
           <div class="tabs" role="tablist">
             <button type="button" class="tab active" data-chart-view="today">Täna</button>
@@ -493,21 +508,21 @@
             <div class="flag">🇫🇮</div>
             <div class="code">SOOME</div>
             <div class="price tabular" id="n-fi-price">—</div>
-            <div class="unit">s/kWh</div>
+            <div class="unit">s/kWh · KM 25,5%</div>
             <div class="delta tabular" id="n-fi-delta"></div>
           </div>
           <div class="n-card" data-code="LV">
             <div class="flag">🇱🇻</div>
             <div class="code">LÄTI</div>
             <div class="price tabular" id="n-lv-price">—</div>
-            <div class="unit">s/kWh</div>
+            <div class="unit">s/kWh · KM 21%</div>
             <div class="delta tabular" id="n-lv-delta"></div>
           </div>
           <div class="n-card" data-code="LT">
             <div class="flag">🇱🇹</div>
             <div class="code">LEEDU</div>
             <div class="price tabular" id="n-lt-price">—</div>
-            <div class="unit">s/kWh</div>
+            <div class="unit">s/kWh · KM 21%</div>
             <div class="delta tabular" id="n-lt-delta"></div>
           </div>
         </div>
@@ -603,7 +618,27 @@
         </div>
         <p id="best-note" style="margin-top:0.75rem;font-size:11px;color:var(--muted-foreground)"></p>
       </div>
-      <div class="card card-pad-lg" id="calc-side-spacer" style="display:none"></div>
+      <div class="card card-pad-lg">
+        <div class="card-head" style="margin-bottom:0.75rem">
+          <div>
+            <h2 class="card-title">Kui palju maksab?</h2>
+            <p class="card-sub">indikatiivne börsikulu · sis. KM</p>
+          </div>
+        </div>
+        <table class="appl-table">
+          <thead>
+            <tr>
+              <th>Seade</th>
+              <th>Hetkehind</th>
+              <th>Parim 12h</th>
+            </tr>
+          </thead>
+          <tbody id="appl-cost-body"></tbody>
+        </table>
+        <p class="appl-foot" id="appl-cost-foot">
+          Arvutus: kWh × börsihind sis. 24% KM. Elektriauto on suurusjärk (kodulaadija 3–6 h, ~20–40 kWh sõltuvalt autost ja laadimisest).
+        </p>
+      </div>
     </section>
 
 
@@ -612,7 +647,7 @@
       <div class="card-head">
         <div>
           <h2 class="card-title">Hinnad homme</h2>
-          <p class="card-sub">15 min · s/kWh · ilma KM</p>
+          <p class="card-sub">15 min · s/kWh sis. KM · sis. KM</p>
         </div>
       </div>
       <div class="chart-wrap" id="tomorrow-chart-wrap">
@@ -634,7 +669,7 @@
           <rect x="1" y="1" width="38" height="38" rx="10" fill="oklch(0.2 0.01 60)" />
           <path d="M22.5 9.5 L13.5 21.5 H19 L17 30.5 L26.5 18.5 H21 L22.5 9.5 Z" fill="url(#logoGrad)" />
         </svg>
-        <span>© 2026 Elektrihind24 · Andmed: Nord Pool EE · ilma KM · reaalajas</span>
+        <span>© 2026 Elektrihind24 · Andmed: Nord Pool EE · sis. KM · reaalajas</span>
       </div>
       <div class="footer-links">
         <a href="#">Säästunipid</a>
@@ -648,7 +683,12 @@
   <script>
   /* ========== LIVE Elektrihind24 — Elering / Nord Pool ========== */
   const CONFIG = {
-    VAT: 1.0, // börsihind ilma KM-ta
+    // Käibemaks 2026: EE 24%, FI 25.5%, LV/LT 21%
+    VAT_EE: 1.24,
+    VAT_FI: 1.255,
+    VAT_LV: 1.21,
+    VAT_LT: 1.21,
+    VAT: 1.24, // EE vaikimisi (põhihinnad)
     CACHE_TTL_MS: 10 * 60 * 1000,
     FETCH_MS: 12000,
     // spot-hinta.fi = Nord Pool EE, CORS lubatud (brauseris töötab)
@@ -669,11 +709,12 @@
   };
 
   const APPLIANCES = [
-    { name: "Pesumasin", kwh: 2.0, hours: 2 },
-    { name: "Nõudepesumasin", kwh: 1.2, hours: 2 },
-    { name: "Saun", kwh: 13.5, hours: 3 },
-    { name: "Elektriauto", kwh: 20, hours: 6 },
-    { name: "Boiler", kwh: 2.0, hours: 3 },
+    { name: "Pesumasin", kwh: 1.5, hours: 2, note: "tüüpiline tsükkel ~1–2 kWh" },
+    { name: "Nõudepesumasin", kwh: 1.2, hours: 2, note: "eco-programm ~1–1.5 kWh" },
+    { name: "Saun", kwh: 9, hours: 3, note: "keris ~6–12 kW, 2–3 h" },
+    { name: "Boiler", kwh: 2.5, hours: 3, note: "soojendus ~2–4 kWh" },
+    { name: "Elektriauto", kwh: 30, hours: 4, note: "indikatiivne ~30 kWh (nt 150–200 km), 3–6 h kodulaadija" },
+    { name: "Kuivati", kwh: 3.5, hours: 2, note: "kuivatus ~2–4 kWh" },
   ];
 
 
@@ -714,11 +755,48 @@
     return arr.reduce((s, x) => s + x, 0) / arr.length;
   }
   function dayKeyLocal(d) {
-    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    try {
+      // Alati Eesti kalendripäev (väldib UTC/US nihkeid)
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Tallinn",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(d);
+      const y = parts.find((p) => p.type === "year").value;
+      const m = parts.find((p) => p.type === "month").value;
+      const day = parts.find((p) => p.type === "day").value;
+      return y + "-" + m + "-" + day;
+    } catch (e) {
+      return (
+        d.getFullYear() +
+        "-" +
+        String(d.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(d.getDate()).padStart(2, "0")
+      );
+    }
   }
-  function eurMwhToSent(eur) {
-    // EUR/MWh → s/kWh (ilma KM)
-    return Math.max(0, +(eur / 10).toFixed(2));
+
+  function hourInTallinn(d) {
+    try {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Tallinn",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).formatToParts(d);
+      const h = +parts.find((p) => p.type === "hour").value;
+      const mi = +parts.find((p) => p.type === "minute").value;
+      return { hour: h % 24, minute: mi };
+    } catch (e) {
+      return { hour: d.getHours(), minute: d.getMinutes() };
+    }
+  }
+  function eurMwhToSent(eur, vat) {
+    // EUR/MWh → s/kWh koos KM-ga
+    const v = vat != null ? vat : CONFIG.VAT_EE;
+    return Math.max(0, +((eur / 10) * v).toFixed(2));
   }
 
   function findBestWorst(horizon, hours) {
@@ -776,12 +854,13 @@
       const ts = d.getTime();
       if (ts < cutoff || ts > future) continue;
       if (typeof row.price_eur_mwh !== "number") continue;
+      const hm = hourInTallinn(d);
       slots15.push({
         ts: Math.floor(ts / 1000),
-        price: eurMwhToSent(row.price_eur_mwh),
+        price: eurMwhToSent(row.price_eur_mwh, CONFIG.VAT_EE),
         dayKey: dayKeyLocal(d),
-        hour: d.getHours(),
-        minute: d.getMinutes(),
+        hour: hm.hour,
+        minute: hm.minute,
       });
     }
     if (!slots15.length) return null;
@@ -828,22 +907,32 @@
   }
 
 
-  /** EUR/kWh (spot-hinta PriceNoTax) → s/kWh ilma KM-ta */
-  function eurKwhToSent(eurKwh) {
-    // EUR/kWh → s/kWh (ilma KM)
-    return Math.max(0, +(eurKwh * 100).toFixed(2));
+  /** EUR/kWh (spot-hinta PriceNoTax) → s/kWh koos riigi KM-ga */
+  function eurKwhToSent(eurKwh, vat) {
+    const v = vat != null ? vat : CONFIG.VAT_EE;
+    return Math.max(0, +(eurKwh * 100 * v).toFixed(2));
+  }
+  function vatFor(code) {
+    if (code === "FI") return CONFIG.VAT_FI;
+    if (code === "LV") return CONFIG.VAT_LV;
+    if (code === "LT") return CONFIG.VAT_LT;
+    return CONFIG.VAT_EE;
+  }
+  function vatPctLabel(code) {
+    return Math.round((vatFor(code) - 1) * 1000) / 10;
   }
 
   function parseSpotList(list) {
     if (!Array.isArray(list) || !list.length) return { slots15: [], hours: [] };
     const slots15 = list.map((row) => {
       const d = new Date(row.DateTime);
+      const hm = hourInTallinn(d);
       return {
         ts: Math.floor(d.getTime() / 1000),
-        price: eurKwhToSent(row.PriceNoTax),
+        price: eurKwhToSent(row.PriceNoTax, CONFIG.VAT_EE),
         dayKey: dayKeyLocal(d),
-        hour: d.getHours(),
-        minute: d.getMinutes(),
+        hour: hm.hour,
+        minute: hm.minute,
       };
     });
     slots15.sort((a, b) => a.ts - b.ts);
@@ -970,14 +1059,14 @@
   function saveCache(hours, slots15, livePrice) {
     try {
       localStorage.setItem(
-        "e24_live",
+        "e24_live_v4",
         JSON.stringify({ hours, slots15, livePrice, ts: Date.now() })
       );
     } catch (e) {}
   }
   function loadCache() {
     try {
-      const c = JSON.parse(localStorage.getItem("e24_live") || "null");
+      const c = JSON.parse(localStorage.getItem("e24_live_v4") || "null");
       if (c && Date.now() - c.ts < CONFIG.CACHE_TTL_MS && c.hours && c.hours.length) return c;
     } catch (e) {}
     return null;
@@ -1035,7 +1124,9 @@
           url,
           (j) => {
             const row = j && j.data && j.data[0];
-            return row && typeof row.price === "number" ? eurMwhToSent(row.price) : null;
+            return row && typeof row.price === "number"
+              ? eurMwhToSent(row.price, vatFor(code))
+              : null;
           },
           9000
         );
@@ -1070,8 +1161,8 @@
                 bestI = i;
               }
             }
-            // energy-charts: EUR/MWh
-            return eurMwhToSent(j.price[bestI]);
+            // energy-charts: EUR/MWh + riigi KM
+            return eurMwhToSent(j.price[bestI], vatFor(code));
           },
           10000
         );
@@ -1087,7 +1178,9 @@
       return tryFetch(
         url,
         (j) =>
-          j && typeof j.PriceNoTax === "number" ? eurKwhToSent(j.PriceNoTax) : null,
+          j && typeof j.PriceNoTax === "number"
+            ? eurKwhToSent(j.PriceNoTax, vatFor(code))
+            : null,
         8000
       );
     }
@@ -1145,67 +1238,82 @@
   async function loadPrices() {
     setSourceLabel("Laadin Nord Pooli hindu…");
     const cached = loadCache();
-    // Näita vahemälu ainult ajutiselt, kuni live tuleb
     if (cached && !state.today.length) {
       applyHours(cached.hours, "cache", cached.slots15, cached.livePrice);
     }
 
+    const bust = (url) =>
+      url + (url.indexOf("?") >= 0 ? "&" : "?") + "_t=" + Date.now();
+
     const trySpot = async () => {
       let list = null;
-      const errors = [];
-      for (const url of [CONFIG.SPOT_TODAY, CONFIG.SPOT_TODAY_ONLY]) {
-        try {
-          list = await fetchRetry(url, CONFIG.FETCH_MS, 3);
-          if (Array.isArray(list) && list.length) break;
-        } catch (e) {
-          errors.push(e);
+      let lastErr = null;
+      // paralleelselt mõlemad, võta esimene õnnestunud
+      const urls = [CONFIG.SPOT_TODAY, CONFIG.SPOT_TODAY_ONLY];
+      const results = await Promise.allSettled(
+        urls.map((u) => fetchRetry(bust(u), CONFIG.FETCH_MS, 3))
+      );
+      for (const r of results) {
+        if (r.status === "fulfilled" && Array.isArray(r.value) && r.value.length) {
+          list = r.value;
+          break;
         }
+        if (r.status === "rejected") lastErr = r.reason;
       }
-      if (!list || !list.length) throw errors[0] || new Error("spot tühi");
+      if (!list || !list.length) throw lastErr || new Error("spot tühi");
+
       const parsed = parseSpotList(list);
       if (!parsed.hours.length) throw new Error("spot parse tühi");
 
       let livePrice = null;
       try {
-        const now = await fetchRetry(CONFIG.SPOT_NOW, 8000, 2);
+        const now = await fetchRetry(bust(CONFIG.SPOT_NOW), 8000, 3);
         if (now && typeof now.PriceNoTax === "number") {
-          livePrice = eurKwhToSent(now.PriceNoTax);
+          livePrice = eurKwhToSent(now.PriceNoTax, CONFIG.VAT_EE);
         }
       } catch (e) {}
       if (livePrice == null) livePrice = liveFromSlots(parsed.slots15);
-      return { ...parsed, livePrice, sourceLabel: "Reaalajas · Nord Pool (EE)" };
+      return {
+        ...parsed,
+        livePrice,
+        sourceLabel: "Reaalajas · Nord Pool EE · sis. 24% KM",
+      };
     };
 
     const tryVolton = async () => {
-      const json = await fetchRetry(CONFIG.VOLTON_EE, CONFIG.FETCH_MS, 3);
+      const json = await fetchRetry(bust(CONFIG.VOLTON_EE), CONFIG.FETCH_MS, 3);
       const parsed = parseVolton(json);
       if (!parsed || !parsed.hours.length) throw new Error("volton tühi");
+      // Volton EUR/MWh → s/kWh sis. EE KM
       const livePrice = liveFromSlots(parsed.slots15);
-      return { ...parsed, livePrice, sourceLabel: "Reaalajas · Nord Pool (Volton)" };
+      return {
+        ...parsed,
+        livePrice,
+        sourceLabel: "Reaalajas · Nord Pool (Volton) · sis. 24% KM",
+      };
     };
 
     const tryElering = async () => {
-      const json = await fetchRetry(eleringUrl(), CONFIG.FETCH_MS, 2);
+      const json = await fetchRetry(bust(eleringUrl()), CONFIG.FETCH_MS, 2);
       const ee = (json.data && json.data.ee) || [];
       if (!ee.length) throw new Error("elering tühi");
       const hours = toHourly(ee);
       const slots15 = toSlots15(ee);
       let livePrice = liveFromSlots(slots15);
       try {
-        const cur = await fetchTimeout(CONFIG.ELERING_CURRENT, 6000);
+        const cur = await fetchTimeout(bust(CONFIG.ELERING_CURRENT), 6000);
         const row = cur.data && cur.data[0];
-        if (row) livePrice = eurMwhToSent(row.price);
+        if (row) livePrice = eurMwhToSent(row.price, CONFIG.VAT_EE);
       } catch (e) {}
       if (json.data) updateNeighborsFromApi(json.data);
       return {
         hours,
         slots15,
         livePrice,
-        sourceLabel: "Reaalajas · Elering",
+        sourceLabel: "Reaalajas · Elering · sis. 24% KM",
       };
     };
 
-    // Järjestus: CORS-sõbralikud esimesena
     const chain = [trySpot, tryVolton, tryElering];
     let lastErr = null;
     for (const fn of chain) {
@@ -1217,15 +1325,14 @@
         loadNeighborPrices();
         return;
       } catch (e) {
-        console.warn("price source failed", fn.name || fn, e);
+        console.warn("price source failed", e);
         lastErr = e;
       }
     }
 
-    // Kõik ebaõnnestus
     if (cached) {
       applyHours(cached.hours, "cache", cached.slots15, cached.livePrice);
-      setSourceLabel("Vahemälu · proovi ↻ uuesti");
+      setSourceLabel("Vahemälu · proovi ↻ (API ei vastanud)");
     } else {
       setSourceLabel("Andmeid ei õnnestunud laadida");
       const viz = document.getElementById("price-chart");
@@ -1258,7 +1365,8 @@
           best = r;
         }
       }
-      const price = eurMwhToSent(best.price);
+      const code = z.code;
+      const price = eurMwhToSent(best.price, vatFor(code));
       state.neighbors[i].price = price;
     });
     const ee = state.neighbors[0].price || 1;
@@ -1270,22 +1378,55 @@
   }
 
   function applyHours(hours, source, slots15, livePrice) {
-    state.allHours = hours;
+    state.allHours = hours || [];
     state.source = source;
     state.livePrice = livePrice != null ? livePrice : null;
-    state.currentHour = new Date().getHours();
-    if (slots15) {
+    // Praegune tund Eesti aja järgi
+    state.currentHour = hourInTallinn(new Date()).hour;
+    const todayKey = dayKeyLocal(new Date());
+    const tom = new Date();
+    tom.setDate(tom.getDate() + 1);
+    const tomKey = dayKeyLocal(tom);
+
+    if (slots15 && slots15.length) {
       state.slots15 = slots15;
-      const todayKey = dayKeyLocal(new Date());
-      const tom = new Date();
-      tom.setDate(tom.getDate() + 1);
-      const tomKey = dayKeyLocal(tom);
       state.today15 = slots15.filter((s) => s.dayKey === todayKey);
       state.tomorrow15 = slots15.filter((s) => s.dayKey === tomKey);
+      // Kui filter tühjaks (vana cache / TZ), võta viimased 96 punkti tänaseks
+      if (!state.today15.length) {
+        const sorted = [...slots15].sort((a, b) => a.ts - b.ts);
+        state.today15 = sorted.slice(-96);
+      }
+    } else {
+      // Sünteesi 15-min graafik tunnihindadest (4 tulpa / tund)
+      state.slots15 = [];
+      state.today15 = [];
+      state.tomorrow15 = [];
     }
-    const { today, tomorrow } = splitDays(hours);
-    state.today = today.length ? today : hours.filter((_, i) => i < 24);
+
+    const { today, tomorrow } = splitDays(hours || []);
+    state.today = today.length ? today : (hours || []).filter((_, i) => i < 24);
     state.tomorrow = tomorrow;
+
+    // Kui 15-min puudub, graafik tunniandmetest
+    if (!state.today15.length && state.today.length) {
+      state.today15 = state.today.map((h) => ({
+        ts: h.ts || 0,
+        price: h.price,
+        dayKey: h.dayKey || todayKey,
+        hour: h.hour,
+        minute: 0,
+      }));
+    }
+    if (!state.tomorrow15.length && state.tomorrow.length) {
+      state.tomorrow15 = state.tomorrow.map((h) => ({
+        ts: h.ts || 0,
+        price: h.price,
+        dayKey: h.dayKey || tomKey,
+        hour: h.hour,
+        minute: 0,
+      }));
+    }
     state.avg = average(state.today.map((p) => p.price));
     if (state.today15 && state.today15.length) {
       let best = state.today15[0];
@@ -1395,7 +1536,7 @@
       formatHour(current.hour) +
       " – " +
       formatHour(current.hour + 1) +
-      " · börsihind ilma KM · " +
+      " · sis. " + Math.round((CONFIG.VAT_EE - 1) * 100) + "% KM · " +
       '<span class="' +
       pctClass +
       ' tabular">' +
@@ -1459,15 +1600,33 @@
 
 
   function renderChart() {
-    const data = state.chartView === "today" ? state.today15 : state.tomorrow15;
-    const avg = state.avg;
+    let data = state.chartView === "today" ? state.today15 : state.tomorrow15;
+    // Viimane varu: kui 15-min tühi, kasuta tunniridu
+    if ((!data || !data.length) && state.chartView === "today" && state.today.length) {
+      data = state.today.map((h) => ({
+        hour: h.hour,
+        minute: 0,
+        price: h.price,
+      }));
+    }
+    if ((!data || !data.length) && state.chartView === "tomorrow" && state.tomorrow.length) {
+      data = state.tomorrow.map((h) => ({
+        hour: h.hour,
+        minute: 0,
+        price: h.price,
+      }));
+    }
+    const avg = state.avg || (data && data.length
+      ? data.reduce((s, d) => s + d.price, 0) / data.length
+      : 0);
     const svg = document.getElementById("price-chart");
+    if (!svg) return;
     if (!data || !data.length) {
       svg.innerHTML =
         '<text x="480" y="140" text-anchor="middle" fill="#5c6570" font-size="14">' +
         (state.chartView === "tomorrow"
-          ? "Homsed hinnad pole veel saadaval (~14:00)"
-          : "Andmed laadimisel…") +
+          ? "Homsed hinnad pole veel saadaval (~14:30)"
+          : "Andmeid ei õnnestunud laadida — proovi ↻") +
         "</text>";
       return;
     }
@@ -1765,6 +1924,7 @@
       });
     });
     updateCalc();
+    renderApplCosts();
   }
 
   function updateCalc() {
@@ -1823,6 +1983,55 @@
     document.getElementById("best-save").textContent =
       savings.toFixed(2) + " € · " + savingsPct.toFixed(0) + "%";
     if (noteEl) noteEl.textContent = note;
+    renderApplCosts();
+  }
+
+  function renderApplCosts() {
+    const body = document.getElementById("appl-cost-body");
+    if (!body) return;
+    const horizon = getHorizon();
+    const live =
+      state.livePrice != null
+        ? state.livePrice
+        : (state.today[state.currentHour] || {}).price || state.avg || 0;
+
+    body.innerHTML = APPLIANCES.map((a) => {
+      const win = Math.max(1, Math.min(a.hours, horizon.length || 1));
+      let bestAvg = live;
+      let bestLabel = "—";
+      if (horizon.length) {
+        const { best, window } = findBestWorst(horizon, win);
+        bestAvg = best.sum;
+        const start = horizon[best.start];
+        const end = horizon[Math.min(best.start + window - 1, horizon.length - 1)];
+        const prefix = start._day === 1 ? "homme " : "täna ";
+        bestLabel =
+          prefix +
+          formatHour(start.hour) +
+          "–" +
+          formatHour((end.hour + 1) % 24);
+      }
+      // kulu eurodes: (s/kWh * kWh) / 100
+      const costNow = (live * a.kwh) / 100;
+      const costBest = (bestAvg * a.kwh) / 100;
+      return (
+        "<tr><td><div class=\"appl-name\">" +
+        a.name +
+        '</div><div class="appl-meta">' +
+        a.kwh +
+        " kWh · " +
+        a.hours +
+        " h · " +
+        a.note +
+        '</div></td><td class="appl-cost">' +
+        costNow.toFixed(2) +
+        ' €</td><td><div class="appl-cost" style="color:var(--price-cheap)">' +
+        costBest.toFixed(2) +
+        ' €</div><div class="appl-best">' +
+        bestLabel +
+        "</div></td></tr>"
+      );
+    }).join("");
   }
 
 
