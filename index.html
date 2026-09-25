@@ -1965,29 +1965,57 @@
 
 
   function renderNeighbors() {
-    document.getElementById("neighbors").innerHTML = state.neighbors
-      .map(
-        (it) =>
-          '<div class="neighbor ' +
-          (it.code === "EE" ? "ee" : "") +
-          '"><div class="neighbor-left"><span style="font-size:1rem">' +
-          it.flag +
-          '</span><span style="font-size:12px;font-weight:500">' +
-          it.code +
-          '</span></div><div class="neighbor-right"><span class="font-display tabular" style="font-size:1rem;font-weight:600">' +
-          (it.price ? it.price.toFixed(2) : "—") +
-          "</span>" +
-          (it.code !== "EE"
-            ? '<span class="tabular" style="width:3rem;text-align:right;font-size:11px;font-weight:600;color:' +
-              (it.delta < 0 ? "var(--price-cheap)" : "var(--price-expensive)") +
-              '">' +
-              (it.delta > 0 ? "+" : "") +
-              it.delta +
-              "%</span>"
-            : "") +
-          "</div></div>"
-      )
-      .join("");
+    // Vana #neighbors plokk eemaldatud — uuenda hero/naabrite kaarte
+    const eeRef =
+      state.livePrice != null
+        ? state.livePrice
+        : (state.today[state.currentHour] || {}).price;
+
+    state.neighbors.forEach((it) => {
+      if (it.code === "EE") return;
+      const id = "n-" + it.code.toLowerCase() + "-price";
+      const dId = "n-" + it.code.toLowerCase() + "-delta";
+      const el = document.getElementById(id);
+      const dEl = document.getElementById(dId);
+      if (!el) return;
+      if (!it.price) {
+        el.textContent = "—";
+        if (dEl) dEl.textContent = "";
+        return;
+      }
+      el.textContent = it.price.toFixed(2);
+      if (dEl && eeRef != null && eeRef > 0) {
+        const delta =
+          it.delta != null
+            ? it.delta
+            : Math.round(((it.price - eeRef) / eeRef) * 100);
+        dEl.textContent = (delta > 0 ? "+" : "") + delta + "% vs EE";
+        dEl.style.color =
+          delta < 0
+            ? "var(--price-cheap)"
+            : delta > 0
+              ? "var(--price-expensive)"
+              : "var(--muted-foreground)";
+      }
+    });
+
+    // Kui vana konteiner veel olemas, ignoreeri ohutult
+    const legacy = document.getElementById("neighbors");
+    if (legacy) {
+      legacy.innerHTML = state.neighbors
+        .filter((it) => it.code !== "EE")
+        .map(
+          (it) =>
+            '<div class="neighbor"><div class="neighbor-left"><span style="font-size:1rem">' +
+            it.flag +
+            '</span><span style="font-size:12px;font-weight:500">' +
+            it.code +
+            '</span></div><div class="neighbor-right"><span class="font-display tabular" style="font-size:1rem;font-weight:600">' +
+            (it.price ? it.price.toFixed(2) : "—") +
+            "</span></div></div>"
+        )
+        .join("");
+    }
   }
 
 
