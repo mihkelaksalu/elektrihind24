@@ -1083,18 +1083,6 @@
         ? state.livePrice
         : (state.today[state.currentHour] || {}).price;
 
-    function todayISO() {
-      const d = new Date();
-      return (
-        d.getFullYear() +
-        "-" +
-        String(d.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(d.getDate()).padStart(2, "0")
-      );
-    }
-
-    /** Proovi URL-i; õnnestumisel tagasta number (s/kWh) */
     async function tryFetch(url, parseFn, ms) {
       try {
         const j = await fetchTimeout(url, ms || 8000);
@@ -1105,96 +1093,36 @@
       }
     }
 
-    /** CORS-proxy ümbris Eleringile / energy-chartsile */
-    function viaProxy(url) {
-      const enc = encodeURIComponent(url);
-      return [
-        url, // otse
-        "https://api.allorigins.win/raw?url=" + enc,
-        "https://corsproxy.org/?" + enc,
-        "https://api.codetabs.com/v1/proxy?quest=" + enc,
-      ];
-    }
-
-    async function priceFromElering(code) {
-      const base = CONFIG.ELERING_CUR[code];
-      if (!base) return null;
-      for (const url of viaProxy(base)) {
-        const v = await tryFetch(
-          url,
-          (j) => {
-            const row = j && j.data && j.data[0];
-            return row && typeof row.price === "number"
-              ? eurMwhToSent(row.price, vatFor(code))
-              : null;
-          },
-          9000
-        );
-        if (v != null) return v;
-      }
-      return null;
-    }
-
-    async function priceFromEnergyCharts(code) {
-      // EUR/MWh, 15 min seeria — võta lähim hetkele
-      const day = todayISO();
-      const base =
-        "https://api.energy-charts.info/price?bzn=" +
-        code +
-        "&start=" +
-        day +
-        "&end=" +
-        day;
-      for (const url of viaProxy(base)) {
-        const v = await tryFetch(
-          url,
-          (j) => {
-            if (!j || !Array.isArray(j.price) || !j.price.length) return null;
-            const times = j.unix_seconds || [];
-            const now = Date.now() / 1000;
-            let bestI = j.price.length - 1;
-            let bestD = Infinity;
-            for (let i = 0; i < times.length; i++) {
-              const d = Math.abs(times[i] - now);
-              if (d < bestD) {
-                bestD = d;
-                bestI = i;
-              }
-            }
-            // energy-charts: EUR/MWh + riigi KM
-            return eurMwhToSent(j.price[bestI], vatFor(code));
-          },
-          10000
-        );
-        if (v != null) return v;
-      }
-      return null;
-    }
-
-    async function priceFromSpot(code) {
-      // CORS * — töötab brauseris; LV/LT võivad olla seotud
-      const url =
-        "https://api.spot-hinta.fi/JustNow?priceRegion=" + encodeURIComponent(code);
-      return tryFetch(
-        url,
+    async function one(code) {
+      // 1) spot-hinta — CORS * (töötab brauseris)
+      const spotUrl =
+        "https://api.spot-hinta.fi/JustNow?priceRegion=" +
+        encodeURIComponent(code);
+      let v = await tryFetch(
+        spotUrl,
         (j) =>
           j && typeof j.PriceNoTax === "number"
             ? eurKwhToSent(j.PriceNoTax, vatFor(code))
             : null,
         8000
       );
-    }
+      if (v != null) return v;
 
-    async function one(code) {
-      // 1) Elering (õige tsoon)
-      let v = await priceFromElering(code);
-      if (v != null) return v;
-      // 2) energy-charts (erinevad hinnad LV/LT)
-      v = await priceFromEnergyCharts(code);
-      if (v != null) return v;
-      // 3) spot-hinta (alati CORS OK)
-      v = await priceFromSpot(code);
-      if (v != null) return v;
+      // 2) Elering otse (kui CORS lubab; ilma aeglaste proxy'deta)
+      const elUrl = CONFIG.ELERING_CUR && CONFIG.ELERING_CUR[code];
+      if (elUrl) {
+        v = await tryFetch(
+          elUrl,
+          (j) => {
+            const row = j && j.data && j.data[0];
+            return row && typeof row.price === "number"
+              ? eurMwhToSent(row.price, vatFor(code))
+              : null;
+          },
+          5000
+        );
+        if (v != null) return v;
+      }
       return null;
     }
 
